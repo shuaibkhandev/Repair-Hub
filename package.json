@@ -1,0 +1,17 @@
+{
+  "name": "Repair Hub",
+  "version": "1.0.0",
+  "description": "Repair Hub Final Year Project Project",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "hbs": "^4.2.0"
+  }
+}
