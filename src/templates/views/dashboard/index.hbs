@@ -53,13 +53,21 @@
           src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/8.png"
           class="icn"
           alt=""
+           onclick="showNoti()"
+            id="showNoti"
         />
+           <div class="noti" id="noti">
+            
+           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa accusantium repellat nesciunt adipisci assumenda doloribus, eos rerum facere necessitatibus excepturi.
+           
+          </div>
         <div class="dp" >
           <img
             src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180014/profile-removebg-preview.png"
             class="dpicn"
             alt="dp"
             onclick="showProfile()"
+            id="showProfile"
           />
          
           <div class="profile" id="profile">
@@ -242,7 +250,26 @@ const showProfile = () => {
   user.classList.toggle("show");
 }
 
+document.addEventListener("click", (e) => {
+    const user = document.getElementById("profile");
+     const noti = document.getElementById("noti");
+     const notiBtn = document.getElementById("showNoti")
+    const profileBtn = document.getElementById("showProfile"); // If you have a button to toggle the profile
 
+    // Check if the clicked element is NOT inside the user profile or the button
+    if (!user.contains(e.target) && !profileBtn.contains(e.target)) {
+        user.classList.remove("show");
+    }
+    if (!noti.contains(e.target) && !notiBtn.contains(e.target)) {
+        noti.classList.remove("show");
+    }
+});
+
+
+const showNoti = () => {
+  const noti = document.getElementById("noti");
+  noti.classList.toggle("show");
+}
 
     </script>
   </body>
