@@ -66,17 +66,20 @@
            
 
              <!-- loginsystem -->
-                <ul class="navbar-nav form-inline my-2 my-lg-0 d-flex">
-                      <li class="nav-item">
-                      <a class="btn btn-outline-primary my-2 my-sm-0 mx-2" type="submit" href="/login">Login</a>
-                      </li>
-                      <li class="nav-item">
-                      <a class="btn btn-outline-primary my-2 my-sm-0 mx-2" type="submit" href="/signup">SignUP</a>
-                      </li>
-                      <!-- <li class="nav-item">
-                      <a class="btn btn-outline-danger my-2 my-sm-0 mx-2" type="submit" href="#">LogOut</a>
-                      </li>    -->
-                </ul>
+              <ul class="navbar-nav form-inline my-2 my-lg-0 d-flex" id="authLinks">
+    <!-- These buttons will be hidden if the user is logged in -->
+    <li class="nav-item" id="loginBtn">
+        <a class="btn btn-outline-primary my-2 my-sm-0 mx-2" href="/login">Login</a>
+    </li>
+    <li class="nav-item" id="signupBtn">
+        <a class="btn btn-outline-primary my-2 my-sm-0 mx-2" href="/signup">Sign Up</a>
+    </li>
+    <!-- Display username if logged in -->
+    <li class="nav-item d-none" id="userDropdown">
+        <a class="btn btn-outline-success my-2 my-sm-0 mx-2" href="#" id="username"></a>
+        <a class="btn btn-outline-danger my-2 my-sm-0 mx-2" href="#" onclick="logout()">Logout</a>
+    </li>
+</ul>
             <!-- end -->
         </div>
     </nav>

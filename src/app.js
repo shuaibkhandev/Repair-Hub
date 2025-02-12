@@ -1,17 +1,40 @@
+const mongodb = require("./config/__dbConn")
 const express = require("express");
-const app = express();
 const path = require("path");
-const port = process.env.PORT || 3000;
 const hbs = require('hbs');
+const userRoutes = require("./routes/User");
+const bookingRoutes = require("./routes/Booking");
 
 
 
+const app = express();
+const port = process.env.PORT || 8000;
 
+// Connecte to DB
+mongodb();
+
+
+// Middleware to parse JSON and URL-encoded data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+// Set view engine and static assets
 app.set("views", path.join(__dirname, "templates/views"));
-// app.set("view engine","ejs");
 app.set("view engine", "hbs");
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "../public")));
 hbs.registerPartials(path.join(__dirname, "templates/partials"));
+
+// Register a helper called "currentYear"
+hbs.registerHelper('currentYear', () => {
+  return new Date().getFullYear();
+});
+
+
+// Routes
+app.use("/api/auth", userRoutes);
+app.use("", bookingRoutes);
+
 
 
 app.get("/", (req, res) => {
@@ -56,10 +79,20 @@ app.get("/login", (req, res) => {
 app.get("/signup", (req, res) => {
   res.render("singup");
 });
+
+
+
+// DASHBOARD ROUTES
+app.get("/dashboard", (req, res) => {
+  res.render("dashboard");
+});
+
+
 app.get("*", (req, res)=>{
   res.render("404")
 })
 
+
 app.listen(port, () => {
-  console.log(`App is listening on port ${port}`);
+  console.log(`App is listening at port ${port}`);
 });
