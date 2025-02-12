@@ -1,0 +1,182 @@
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, 
+                   initial-scale=1.0"
+    />
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../css/dashboard.css" />
+  </head>
+
+  <style>
+    .repair-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .repair-table th, .repair-table td { border: 1px solid #ddd; padding: 10px;
+    text-align: left; } .repair-table th { background-color: #f4f4f4; } .status
+    { font-weight: bold; text-transform: capitalize; } .status.pending { color:
+    orange; } .status.completed { color: green; } .status.cancelled { color:
+    red; }
+  </style>
+  <body>
+
+    <!-- for header part -->
+    <header>
+
+      <div class="logosec">
+        <div class="logo">Refair Hub</div>
+        <img
+          src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182541/Untitled-design-(30).png"
+          class="icn menuicn"
+          id="menuicn"
+          alt="menu-icon"
+        />
+      </div>
+
+      <div class="searchbar">
+        <input type="text" placeholder="Search" />
+        <div class="searchbtn">
+          <img
+            src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
+            class="icn srchicn"
+            alt="search-icon"
+          />
+        </div>
+      </div>
+
+      <div class="message">
+        <div class="circle"></div>
+        <img
+          src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/8.png"
+          class="icn"
+          alt=""
+        />
+        <div class="dp">
+          <img
+            src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180014/profile-removebg-preview.png"
+            class="dpicn"
+            alt="dp"
+          />
+        </div>
+      </div>
+
+    </header>
+
+    <div class="main-container">
+      <div class="navcontainer">
+        <nav class="nav">
+          <div class="nav-upper-options">
+              <a href="/dashboard" class="nav-option option1">
+              <img
+                src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png"
+                class="nav-img"
+                alt="dashboard"
+              />
+              <h3> Dashboard</h3>
+            </a>
+
+            <a href="/dashboard/repair-requests" class="option2 nav-option">
+              <img
+                src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/9.png"
+                class="nav-img"
+                alt="articles"
+              />
+              <h3>Repair Requests</h3>
+            </a>
+
+            <a href="/dashboard/users" class="nav-option option3">
+              <img
+                src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/5.png"
+                class="nav-img"
+                alt="report"
+              />
+              <h3>Total Registered Users</h3>
+            </a>
+          </div>
+        </nav>
+      </div>
+      <div class="main">
+
+        <div class="searchbar2">
+          <input type="text" name="" id="" placeholder="Search" />
+          <div class="searchbtn">
+            <img
+              src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
+              class="icn srchicn"
+              alt="search-button"
+            />
+          </div>
+        </div>
+
+        <div class="report-container">
+          <div class="report-header">
+            <h1 class="recent-requests">Total Repairing Requests</h1>
+          </div>
+
+          <div class="report-body">
+            <table class="repair-table">
+              <thead>
+                <tr>
+                  <th>Service Type</th>
+                  <th>Customer Name</th>
+                  <th>Phone</th>
+                  <th>Location</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="booking-list">
+                <!-- Data will be inserted here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script>
+   const user = JSON.parse(localStorage.getItem("user"));
+
+// Redirect non-admin users
+if (user && !user.isAdmin) {
+  window.location.href = "/";
+}
+
+// Function to fetch and display bookings
+async function fetchBookings() {
+  try {
+    const response = await fetch("http://localhost:8000/bookings");
+    const bookings = await response.json();
+
+    const bookingList = document.getElementById("booking-list");
+    bookingList.innerHTML = ""; // Clear previous data
+
+    bookings.forEach(booking => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${booking.serviceType}</td>
+        <td>${booking.name}</td>
+        <td>${booking.phone}</td>
+        <td>${booking.location}</td>
+        <td class="status">Publish</td>
+      `;
+      bookingList.appendChild(row);
+    });
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+  }
+}
+
+// Function to fetch and display users
+
+// Fetch data when DOM is fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+  fetchBookings();
+});
+
+
+    </script>
+  </body>
+</html>

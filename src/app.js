@@ -87,6 +87,14 @@ app.get("/dashboard", (req, res) => {
   res.render("dashboard");
 });
 
+app.get("/dashboard/repair-requests", (req, res) => {
+  res.render("dashboard/repair-requests");
+});
+
+app.get("/dashboard/users", (req, res) => {
+  res.render("dashboard/users");
+});
+
 
 app.get("*", (req, res)=>{
   res.render("404")
