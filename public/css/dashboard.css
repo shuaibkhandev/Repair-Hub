@@ -67,6 +67,8 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
+}.searchbar{
+  position: relative;
 }
 
 .searchbar2 {
