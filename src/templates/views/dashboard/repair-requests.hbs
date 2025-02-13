@@ -19,6 +19,33 @@
     { font-weight: bold; text-transform: capitalize; } .status.pending { color:
     orange; } .status.completed { color: green; } .status.cancelled { color:
     red; }
+
+    .modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  text-align: left;
+}
+
+.close-btn {
+  float: right;
+  font-size: 28px;
+  cursor: pointer;
+}
+
   </style>
   <body>
 
@@ -122,8 +149,8 @@
                   <th>Service Type</th>
                   <th>Customer Name</th>
                   <th>Phone</th>
-                  <th>Location</th>
                   <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody id="booking-list">
@@ -136,6 +163,33 @@
       </div>
     </div>
 
+
+
+    <div id="details-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2>Booking Details</h2>
+    <p><strong>Name:</strong> <span id="modal-name"></span></p>
+    <p><strong>Phone:</strong> <span id="modal-phone"></span></p>
+    <p><strong>Email:</strong> <span id="modal-email"></span></p>
+    <p><strong>Service Type:</strong> <span id="modal-service"></span></p>
+    <p><strong>Special Request:</strong> <span id="modal-request"></span></p>
+    <p><strong>Service Date:</strong> <span id="modal-date"></span></p>
+    <p><strong>Location:</strong> <span id="modal-location"></span></p>
+    
+    <label for="status">Update Status:</label>
+    <select id="status">
+      <option value="Pending">Pending</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+      <option value="Cancelled">Cancelled</option>
+    </select>
+    
+    <button id="update-status-btn">Update Status</button>
+  </div>
+</div>
+
+
     <script>
    const user = JSON.parse(localStorage.getItem("user"));
 
@@ -144,7 +198,6 @@ if (user && !user.isAdmin) {
   window.location.href = "/";
 }
 
-// Function to fetch and display bookings
 async function fetchBookings() {
   try {
     const response = await fetch("http://localhost:8000/bookings");
@@ -153,28 +206,81 @@ async function fetchBookings() {
     const bookingList = document.getElementById("booking-list");
     bookingList.innerHTML = ""; // Clear previous data
 
-    bookings.forEach(booking => {
+    bookings.forEach((booking) => {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${booking.serviceType}</td>
         <td>${booking.name}</td>
         <td>${booking.phone}</td>
-        <td>${booking.location}</td>
-        <td class="status">Publish</td>
+        <td class="status">${booking.status || "Pending"}</td>
+        <td>
+          <button class="details-btn" data-id="${booking._id}">Details</button>
+        </td>
       `;
       bookingList.appendChild(row);
+    });
+
+    document.querySelectorAll(".details-btn").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        const bookingId = e.target.getAttribute("data-id");
+        showDetails(bookingId);
+      });
     });
   } catch (error) {
     console.error("Error fetching bookings:", error);
   }
 }
 
-// Function to fetch and display users
+async function showDetails(id) {
+  try {
+    const response = await fetch(`http://localhost:8000/booking/${id}`);
+    const booking = await response.json();
 
-// Fetch data when DOM is fully loaded
-document.addEventListener("DOMContentLoaded", () => {
-  fetchBookings();
+    document.getElementById("modal-name").textContent = booking.name;
+    document.getElementById("modal-phone").textContent = booking.phone;
+    document.getElementById("modal-email").textContent = booking.email;
+    document.getElementById("modal-service").textContent = booking.serviceType;
+    document.getElementById("modal-request").textContent = booking.specialRequest || "N/A";
+    document.getElementById("modal-date").textContent = new Date(booking.serviceDate).toDateString();
+    document.getElementById("modal-location").textContent = booking.location;
+
+    document.getElementById("update-status-btn").setAttribute("data-id", id);
+    
+    document.getElementById("details-modal").style.display = "block";
+  } catch (error) {
+    console.error("Error fetching details:", error);
+  }
+}
+
+document.getElementById("update-status-btn").addEventListener("click", async () => {
+  const bookingId = document.getElementById("update-status-btn").getAttribute("data-id");
+  const newStatus = document.getElementById("status").value;
+
+  try {
+    const response = await fetch(`http://localhost:8000/booking/${bookingId}/status`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus }),
+    });
+
+    if (response.ok) {
+      alert("Status updated successfully");
+      document.getElementById("details-modal").style.display = "none";
+      fetchBookings(); // Refresh data
+    } else {
+      alert("Failed to update status");
+    }
+  } catch (error) {
+    console.error("Error updating status:", error);
+  }
 });
+
+document.querySelector(".close-btn").addEventListener("click", () => {
+  document.getElementById("details-modal").style.display = "none";
+});
+
+// Fetch data on page load
+fetchBookings();
 
 
     </script>

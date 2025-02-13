@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.post("/booking", async (req, res) => {
   try {
-    const { name, phone, email, serviceDate, serviceType, specialRequest, location } =
+    const { name, phone, email, serviceDate, serviceType, specialRequest, location , status} =
       req.body;
 
     const newBooking = new Booking({
@@ -17,7 +17,8 @@ router.post("/booking", async (req, res) => {
       serviceDate,
       serviceType,
       specialRequest,
-      location
+      location,
+      status
     });
 
     await newBooking.save();
@@ -53,6 +54,34 @@ router.get("/booking/:id", async (req, res) => {
       res.status(500).json({ message: "Server error", error: error.message });
     }
   });
+
+
+  // Update booking status
+router.patch("/booking/:id/status", async (req, res) => {
+  try {
+    const { status } = req.body;
+
+    // Ensure the status is one of the allowed values
+    const allowedStatuses = ["Pending", "In Progress", "Completed", "Cancelled"];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ message: "Invalid status value" });
+    }
+
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedBooking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+
+    res.status(200).json({ message: "Status updated successfully", booking: updatedBooking });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+});
 
 
   // Delete a booking by ID
