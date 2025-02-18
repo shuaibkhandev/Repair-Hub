@@ -50,7 +50,7 @@
   <body>
 
     <!-- for header part -->
-    <header>
+       <header>
 
       <div class="logosec">
         <div class="logo">Refair Hub</div>
@@ -63,7 +63,7 @@
       </div>
 
       <div class="searchbar">
-        <input type="text" placeholder="Search" />
+        <input type="text" placeholder="Search" id="searchBar"/>
         <div class="searchbtn">
           <img
             src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
@@ -71,6 +71,9 @@
             alt="search-icon"
           />
         </div>
+          <span id="clearSearch" class="clear-icon">✖</span>
+
+        <div id="search-results" class="search-results"></div>
       </div>
 
       <div class="message">
@@ -79,13 +82,37 @@
           src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/8.png"
           class="icn"
           alt=""
+           onclick="showNoti()"
+            id="showNoti"
         />
-        <div class="dp">
+           <div class="noti" id="noti">
+            
+           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa accusantium repellat nesciunt adipisci assumenda doloribus, eos rerum facere necessitatibus excepturi.
+           
+          </div>
+        <div class="dp" >
           <img
             src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180014/profile-removebg-preview.png"
             class="dpicn"
             alt="dp"
+            onclick="showProfile()"
+            id="showProfile"
           />
+         
+          <div class="profile" id="profile">
+            
+              <ul>
+                <li>
+                  <i class="fa-regular fa-circle-user"></i>
+                  <a href="">Proflie Settings</a>
+                </li>
+                 <li>
+                  <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i>
+                  <a href="">Logout</a>
+                </li>
+              </ul>
+           
+          </div>
         </div>
       </div>
 
@@ -190,95 +217,10 @@
 </div>
 
 
- <script src="../js/dashboard/script.js"></script>
-    <script>
-   
 
-async function fetchBookings() {
-  try {
-    const response = await fetch("http://localhost:8000/bookings");
-    const bookings = await response.json();
-
-    const bookingList = document.getElementById("booking-list");
-    bookingList.innerHTML = ""; // Clear previous data
-
-    bookings.forEach((booking) => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${booking.serviceType}</td>
-        <td>${booking.name}</td>
-        <td>${booking.phone}</td>
-        <td class="status">${booking.status || "Pending"}</td>
-        <td>
-          <button class="details-btn" data-id="${booking._id}">Details</button>
-        </td>
-      `;
-      bookingList.appendChild(row);
-    });
-
-    document.querySelectorAll(".details-btn").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        const bookingId = e.target.getAttribute("data-id");
-        showDetails(bookingId);
-      });
-    });
-  } catch (error) {
-    console.error("Error fetching bookings:", error);
-  }
-}
-
-async function showDetails(id) {
-  try {
-    const response = await fetch(`http://localhost:8000/booking/${id}`);
-    const booking = await response.json();
-
-    document.getElementById("modal-name").textContent = booking.name;
-    document.getElementById("modal-phone").textContent = booking.phone;
-    document.getElementById("modal-email").textContent = booking.email;
-    document.getElementById("modal-service").textContent = booking.serviceType;
-    document.getElementById("modal-request").textContent = booking.specialRequest || "N/A";
-    document.getElementById("modal-date").textContent = new Date(booking.serviceDate).toDateString();
-    document.getElementById("modal-location").textContent = booking.location;
-
-    document.getElementById("update-status-btn").setAttribute("data-id", id);
-    
-    document.getElementById("details-modal").style.display = "block";
-  } catch (error) {
-    console.error("Error fetching details:", error);
-  }
-}
-
-document.getElementById("update-status-btn").addEventListener("click", async () => {
-  const bookingId = document.getElementById("update-status-btn").getAttribute("data-id");
-  const newStatus = document.getElementById("status").value;
-
-  try {
-    const response = await fetch(`http://localhost:8000/booking/${bookingId}/status`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: newStatus }),
-    });
-
-    if (response.ok) {
-      alert("Status updated successfully");
-      document.getElementById("details-modal").style.display = "none";
-      fetchBookings(); // Refresh data
-    } else {
-      alert("Failed to update status");
-    }
-  } catch (error) {
-    console.error("Error updating status:", error);
-  }
-});
-
-document.querySelector(".close-btn").addEventListener("click", () => {
-  document.getElementById("details-modal").style.display = "none";
-});
-
-// Fetch data on page load
-fetchBookings();
+<script src="../js/dashboard/main.js"></script>
+<script src="../js/dashboard/repair.js"></script>
 
 
-    </script>
   </body>
 </html>

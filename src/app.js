@@ -84,7 +84,7 @@ app.get("/signup", (req, res) => {
 
 // DASHBOARD ROUTES
 app.get("/dashboard", (req, res) => {
-  res.render("dashboard");
+  res.render("dashboard/home");
 });
 
 app.get("/dashboard/repair-requests", (req, res) => {
