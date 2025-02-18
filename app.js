@@ -104,6 +104,4 @@ app.get("*", (req, res)=>{
 })
 
 
-app.listen(port, () => {
-  console.log(`App is listening at port ${port}`);
-});
+module.exports = app; // Export the app for Vercel
