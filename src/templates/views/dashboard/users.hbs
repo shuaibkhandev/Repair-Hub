@@ -23,7 +23,7 @@
   <body>
 
     <!-- for header part -->
-    <header>
+      <header>
 
       <div class="logosec">
         <div class="logo">Refair Hub</div>
@@ -36,7 +36,7 @@
       </div>
 
       <div class="searchbar">
-        <input type="text" placeholder="Search" />
+        <input type="text" placeholder="Search" id="searchBar"/>
         <div class="searchbtn">
           <img
             src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
@@ -44,6 +44,9 @@
             alt="search-icon"
           />
         </div>
+          <span id="clearSearch" class="clear-icon">✖</span>
+
+        <div id="search-results" class="search-results"></div>
       </div>
 
       <div class="message">
@@ -52,13 +55,37 @@
           src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/8.png"
           class="icn"
           alt=""
+           onclick="showNoti()"
+            id="showNoti"
         />
-        <div class="dp">
+           <div class="noti" id="noti">
+            
+           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa accusantium repellat nesciunt adipisci assumenda doloribus, eos rerum facere necessitatibus excepturi.
+           
+          </div>
+        <div class="dp" >
           <img
             src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180014/profile-removebg-preview.png"
             class="dpicn"
             alt="dp"
+            onclick="showProfile()"
+            id="showProfile"
           />
+         
+          <div class="profile" id="profile">
+            
+              <ul>
+                <li>
+                  <i class="fa-regular fa-circle-user"></i>
+                  <a href="">Proflie Settings</a>
+                </li>
+                 <li>
+                  <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i>
+                  <a href="">Logout</a>
+                </li>
+              </ul>
+           
+          </div>
         </div>
       </div>
 
@@ -136,42 +163,9 @@
       </div>
     </div>
 
+<script src="../js/dashboard/main.js"></script>
+<script src="../js/dashboard/users.js"></script>
     <script>
-   const user = JSON.parse(localStorage.getItem("user"));
-
-// Redirect non-admin users
-if (user && !user.isAdmin) {
-  window.location.href = "/";
-}
-
-
-// Function to fetch and display users
-async function fetchUsers() {
-  try {
-    const response = await fetch("http://localhost:8000/api/auth/users");
-    const users = await response.json();
-
-    const tableBody = document.getElementById("users-list");
-    tableBody.innerHTML = ""; // Clear existing rows
-
-    users.forEach(user => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${user.name}</td>
-        <td>${user.email}</td>
-        <td>${user.phone || "N/A"}</td>
-      `;
-      tableBody.appendChild(row);
-    });
-  } catch (error) {
-    console.error("Error fetching users:", error);
-  }
-}
-
-// Fetch data when DOM is fully loaded
-document.addEventListener("DOMContentLoaded", () => {
-  fetchUsers();
-});
 
 
     </script>
