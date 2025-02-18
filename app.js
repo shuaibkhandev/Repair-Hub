@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 // Set view engine and static assets
 app.set("views", path.join(__dirname, "templates/views"));
 app.set("view engine", "hbs");
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(express.static(path.join(__dirname, "public")));
 hbs.registerPartials(path.join(__dirname, "templates/partials"));
 
 // Register a helper called "currentYear"
@@ -104,8 +104,6 @@ app.get("*", (req, res)=>{
 })
 
 
-// app.listen(port, () => {
-//   console.log(`App is listening at port ${port}`);
-// });
-
-module.exports = app; 
+app.listen(port, () => {
+  console.log(`App is listening at port ${port}`);
+});

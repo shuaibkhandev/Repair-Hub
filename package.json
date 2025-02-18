@@ -4,9 +4,9 @@
   "description": "Repair Hub Final Year Project Project",
   "main": "app.js",
   "scripts": {
-    "start": "node src/app.js -e js,hbs",
-     "dev": "nodemon src/app.js -e js,hbs",
-  "vercel-build": "node src/app.js"
+    "start": "node ./app.js ",
+     "dev": "nodemon ./app.js -e js,hbs",
+  "vercel-build": "node app.js"
   },
   "keywords": [],
   "author": "",
