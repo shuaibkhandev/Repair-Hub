@@ -1,19 +1,12 @@
+<!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+      <link rel="stylesheet" href="../css/dashboard.css" />
 
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, 
-                   initial-scale=1.0"
-    />
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="../css/dashboard.css" />
-  </head>
-
-  <style>
+    <style>
     .repair-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     .repair-table th, .repair-table td { border: 1px solid #ddd; padding: 10px;
     text-align: left; } .repair-table th { background-color: #f4f4f4; } .status
@@ -63,11 +56,10 @@
   margin: 5px 0;
 }
 
-  </style>
-  <body>
-
-    <!-- for header part -->
-    <header>
+    </style>
+</head>
+<body>
+   <header>
 
       <div class="logosec">
         <div class="logo">Refair Hub</div>
@@ -138,8 +130,7 @@
       </div>
 
     </header>
-
-    <div class="main-container">
+   <div class="main-container">
       <div class="navcontainer">
         <nav class="nav">
           <div class="nav-upper-options">
@@ -185,57 +176,10 @@
           </div>
         </div>
 
-        <div class="report-container">
-          <div class="report-header">
-            <h1 class="recent-requests">Recent Repairing Requests</h1>
-            <button class="view">View All</button>
-          </div>
-
-          <div class="report-body">
-            <table class="repair-table">
-              <thead>
-                <tr>
-                  <th>Service Type</th>
-                  <th>Customer Name</th>
-                  <th>Phone</th>
-                  <th>Location</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="booking-list">
-                <!-- Data will be inserted here -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="report-container">
-          <div class="report-header">
-            <h1 class="recent-requests">Recent Registered Users</h1>
-            <button class="view">View All</button>
-          </div>
-
-          <div class="report-body">
-            <table class="repair-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                </tr>
-              </thead>
-              <tbody id="users-list">
-                <!-- Data will be inserted here -->
-              </tbody>
-            </table>
-          </div>
-        </div>
+       
       </div>
     </div>
-
-
-
-    <script src="../js/dashboard/script.js">
-    </script>
-  </body>
+    
+ <script src="../js/dashboard/script.js"></script>
+</body>
 </html>

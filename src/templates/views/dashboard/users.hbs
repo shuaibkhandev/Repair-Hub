@@ -135,15 +135,9 @@
         </div>
       </div>
     </div>
-
-    <script>
-   const user = JSON.parse(localStorage.getItem("user"));
-
-// Redirect non-admin users
-if (user && !user.isAdmin) {
-  window.location.href = "/";
-}
-
+ <script src="../js/dashboard/script.js"></script>
+    {{!-- <script>
+   
 
 // Function to fetch and display users
 async function fetchUsers() {
@@ -174,6 +168,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-    </script>
+    </script> --}}
   </body>
 </html>

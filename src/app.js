@@ -95,6 +95,9 @@ app.get("/dashboard/users", (req, res) => {
   res.render("dashboard/users");
 });
 
+app.get("/dashboard/profile", (req, res) => {
+  res.render("dashboard/profile");
+});
 
 app.get("*", (req, res)=>{
   res.render("404")

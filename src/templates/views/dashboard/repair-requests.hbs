@@ -190,13 +190,9 @@
 </div>
 
 
+ <script src="../js/dashboard/script.js"></script>
     <script>
-   const user = JSON.parse(localStorage.getItem("user"));
-
-// Redirect non-admin users
-if (user && !user.isAdmin) {
-  window.location.href = "/";
-}
+   
 
 async function fetchBookings() {
   try {
