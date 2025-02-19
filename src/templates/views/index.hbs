@@ -127,7 +127,7 @@
             <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
                 <h6 class="text-secondary text-uppercase">About Us</h6>
                 <h1 class="mb-5">Your trusted Repair And Maintenance Experts</h1>
-                <p class="mb-4">At <span><b>RMS</b></span>,we pride ourselves on delivering top-tier repair and maintenance services. Our team of experts ensures quality workmanship, timely service, and customer Satisfaction. From Electrical and plumbingto Carpentry, we handle it all with precision and care. Trust us to keep your home or business running smoothly. </p>
+                <p class="mb-4">At <span><b>Repair-Hub</b></span>,we pride ourselves on delivering top-tier repair and maintenance services. Our team of experts ensures quality workmanship, timely service, and customer Satisfaction. From Electrical and plumbingto Carpentry, we handle it all with precision and care. Trust us to keep your home or business running smoothly. </p>
                 <p class="fw-medium text-primary"><i class="fa fa-check text-success me-3"></i>Residential & commercial services</p>
                 <p class="fw-medium text-primary"><i class="fa fa-check text-success me-3"></i>Quality services at affordable prices</p>
                 <p class="fw-medium text-primary"><i class="fa fa-check text-success me-3"></i>Emergency services</p>
@@ -213,8 +213,8 @@
                         <div class="service-icon flex-shrink-0">
                             <i class="fa fa-bolt  fa-2x"></i>
                         </div>
-                        <h5 class="mb-3">Electrician</h5>
-                        <p class="m-0">At RMS,our expert electrician provide Reliable installation,repair and maintenance for all your Electrical needs.From wiring upgrades to emergency repairs,we ensure safety and efficiency.Contact us for quality service.</p>
+                        <h5 class="mb-3">Electrical</h5>
+                        <p class="m-0">At Repair-Hub,our expert electrician provide Reliable installation,repair and maintenance for all your Electrical needs.From wiring upgrades to emergency repairs,we ensure safety and efficiency.Contact us for quality service.</p>
                         <!-- <a class="btn btn-square" href=""><i class="fa fa-arrow-right"></i></a> -->
                     </div>
                     <a href="/electrical" class="btn bg-white text-primary w-100 mt-2">Explore<i class="fa fa-arrow-right text-secondary ms-2"></i></a>
@@ -224,8 +224,8 @@
                         <div class="service-icon flex-shrink-0">
                             <i class="fa fa-tools fa-2x"></i>
                         </div>
-                        <h5 class="mb-3">Plumber</h5>
-                        <p class="m-0">At RMS,our experienced plumbers provide Reliable installation,repair and maintenance services for all your plumbing needs. Whether it's unclogging drains,fixing leaks, or installing new fixtures,we guarantee prompt and efficient service.</p>
+                        <h5 class="mb-3">Plumbing</h5>
+                        <p class="m-0">At Repair-Hub,our experienced plumbers provide Reliable installation,repair and maintenance services for all your plumbing needs. Whether it's unclogging drains,fixing leaks, or installing new fixtures,we guarantee prompt and efficient service.</p>
                         <!-- <a class="btn btn-square" href=""><i class="fa fa-arrow-right"></i></a> -->
                     </div>
                     <a href="/plumbing" class="btn bg-white text-primary w-100 mt-2">Explore<i class="fa fa-arrow-right text-secondary ms-2"></i></a>
@@ -235,8 +235,8 @@
                         <div class="service-icon flex-shrink-0">
                             <i class="fas fa-hammer fa-2x"></i>
                         </div>
-                        <h5 class="mb-3">Carpenter</h5>
-                        <p class="m-0">At RMS,our Expert Carpenter offer high-quality craftsmanship for all your woodworking needs.From customize furniture to home repairs and installations,we deliver precision and durability.</p>
+                        <h5 class="mb-3">Carpentry</h5>
+                        <p class="m-0">At Repair-Hub,our Expert Carpenter offer high-quality craftsmanship for all your woodworking needs.From customize furniture to home repairs and installations,we deliver precision and durability.</p>
                         <!-- <a class="btn btn-square" href=""><i class="fa fa-arrow-right"></i></a> -->
                     </div>
                     <a href="/carpenter" class="btn bg-white text-primary w-100 mt-2">Explore<i class="fa fa-arrow-right text-secondary ms-2"></i></a>
@@ -276,18 +276,39 @@
             <input type="date" class="form-control border-0" name="serviceDate" placeholder="Service Date" required style="height: 55px;">
         </div>
         <div class="col-12 col-sm-6">
-            <select class="form-select border-0" name="serviceType" required style="height: 55px;">
-                <option selected disabled>Select A Service</option>
-                <option value="Electrical">Electrical</option>
-                <option value="Power Backup Installation">Power Backup Installation</option>
-                <option value="Wiring Repair">Wiring Repair</option>
-                <option value="Outlet Installation">Outlet Installation</option>
-                <option value="Electrical Panel Upgrade">Electrical Panel Upgrade</option>
-                <option value="EV Charger Installation">EV Charger Installation</option>
-                <option value="Plumbing">Plumbing</option>
-                <option value="Carpentry">Carpentry</option>
-            </select>
-        </div>
+    <select class="form-select border-0" name="serviceType" required style="height: 55px;">
+        <option selected disabled>Select A Service</option>
+        
+        <!-- Electrical Services -->
+        <optgroup label="Electrical">
+            <option value="Power Backup Installation">Power Backup Installation</option>
+            <option value="Wiring Repair">Wiring Repair</option>
+            <option value="Outlet Installation">Outlet Installation</option>
+            <option value="Electrical Panel Upgrade">Electrical Panel Upgrade</option>
+            <option value="EV Charger Installation">EV Charger Installation</option>
+        </optgroup>
+
+        <!-- Plumbing Services -->
+        <optgroup label="Plumbing">
+            <option value="Leak Repair">Leak Repair</option>
+            <option value="Drain Cleaning">Drain Cleaning</option>
+            <option value="Pipe Installation">Pipe Installation</option>
+            <option value="Water Heater Repair">Water Heater Repair</option>
+            <option value="Sewer Line Repair">Sewer Line Repair</option>
+        </optgroup>
+
+        <!-- Carpentry Services -->
+        <optgroup label="Carpentry">
+            <option value="Furniture Assembly">Furniture Assembly</option>
+            <option value="Cabinet Installation">Cabinet Installation</option>
+            <option value="Door Repair">Door Repair</option>
+            <option value="Wood Floor Installation">Wood Floor Installation</option>
+            <option value="Deck Construction">Deck Construction</option>
+        </optgroup>
+
+    </select>
+</div>
+
         <div class="col-12">
             <textarea class="form-control border-0" name="specialRequest" placeholder="Special Request"></textarea>
         </div>
