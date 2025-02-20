@@ -20,16 +20,6 @@ const BookingSchema = new mongoose.Schema({
   serviceType: {
     type: String,
     required: true,
-    enum: [
-      "Electrical",
-      "Power Backup Installation",
-      "Wiring Repair",
-      "Outlet Installation",
-      "Electrical Panel Upgrade",
-      "EV Charger Installation",
-      "Plumbing",
-      "Carpentry",
-    ],
   },
   specialRequest: {
     type: String,

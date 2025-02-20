@@ -16,7 +16,7 @@ const showProfile = () => {
    
    document.addEventListener("click", (e) => {
     const user = document.getElementById("profile");
-     const noti = document.getElementById("noti");
+     const noti = document.getElementById("notiCsontainer");
      const notiBtn = document.getElementById("showNoti")
     const profileBtn = document.getElementById("showProfile"); // If you have a button to toggle the profile
    
@@ -31,7 +31,7 @@ const showProfile = () => {
    
    
    const showNoti = () => {
-   const noti = document.getElementById("noti");
+   const noti = document.getElementById("notiContainer");
    noti.classList.toggle("show");
    }
 
@@ -153,4 +153,6 @@ document.addEventListener("DOMContentLoaded", () => {
     fetchBookings();
     fetchUsers();
     });
+    
+
     

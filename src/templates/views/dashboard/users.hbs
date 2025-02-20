@@ -23,108 +23,10 @@
   <body>
 
     <!-- for header part -->
-      <header>
-
-      <div class="logosec">
-        <div class="logo">Refair Hub</div>
-        <img
-          src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182541/Untitled-design-(30).png"
-          class="icn menuicn"
-          id="menuicn"
-          alt="menu-icon"
-        />
-      </div>
-
-      <div class="searchbar">
-        <input type="text" placeholder="Search" id="searchBar"/>
-        <div class="searchbtn">
-          <img
-            src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
-            class="icn srchicn"
-            alt="search-icon"
-          />
-        </div>
-          <span id="clearSearch" class="clear-icon">✖</span>
-
-        <div id="search-results" class="search-results"></div>
-      </div>
-
-      <div class="message">
-        <div class="circle"></div>
-        <img
-          src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/8.png"
-          class="icn"
-          alt=""
-           onclick="showNoti()"
-            id="showNoti"
-        />
-           <div class="noti" id="noti">
-            
-           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsa accusantium repellat nesciunt adipisci assumenda doloribus, eos rerum facere necessitatibus excepturi.
-           
-          </div>
-        <div class="dp" >
-          <img
-            src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180014/profile-removebg-preview.png"
-            class="dpicn"
-            alt="dp"
-            onclick="showProfile()"
-            id="showProfile"
-          />
-         
-          <div class="profile" id="profile">
-            
-              <ul>
-                <li>
-                  <i class="fa-regular fa-circle-user"></i>
-                  <a href="">Proflie Settings</a>
-                </li>
-                 <li>
-                  <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i>
-                  <a href="">Logout</a>
-                </li>
-              </ul>
-           
-          </div>
-        </div>
-      </div>
-
-    </header>
+      {{>dashboardHeader}}
 
     <div class="main-container">
-      <div class="navcontainer">
-        <nav class="nav">
-          <div class="nav-upper-options">
-            <a href="/dashboard" class="nav-option option1">
-              <img
-                src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png"
-                class="nav-img"
-                alt="dashboard"
-              />
-              <h3> Dashboard</h3>
-            </a>
-
-            <a href="/dashboard/repair-requests" class="option2 nav-option">
-              <img
-                src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/9.png"
-                class="nav-img"
-                alt="articles"
-              />
-              <h3>Repair Requests</h3>
-            </a>
-
-            <a href="/dashboard/users" class="nav-option option3">
-              <img
-                src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/5.png"
-                class="nav-img"
-                alt="report"
-              />
-              <h3>Total Registered Users</h3>
-            </a>
-
-          </div>
-        </nav>
-      </div>
+          {{>dashboardSidebar}}
       <div class="main">
 
         <div class="searchbar2">
@@ -162,7 +64,7 @@
         </div>
       </div>
     </div>
-
+ <script src="../js/dashboard/script.js"></script>
     <script>
    const user = JSON.parse(localStorage.getItem("user"));
 

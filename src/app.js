@@ -4,6 +4,7 @@ const path = require("path");
 const hbs = require('hbs');
 const userRoutes = require("./routes/User");
 const bookingRoutes = require("./routes/Booking");
+const ServicesRoute = require("./routes/Services");
 
 
 
@@ -34,6 +35,7 @@ hbs.registerHelper('currentYear', () => {
 // Routes
 app.use("/api/auth", userRoutes);
 app.use("", bookingRoutes);
+app.use("", ServicesRoute);
 
 
 
@@ -97,6 +99,10 @@ app.get("/dashboard/users", (req, res) => {
 
 app.get("/dashboard/profile", (req, res) => {
   res.render("dashboard/profile");
+});
+
+app.get("/dashboard/our-services", (req, res) => {
+  res.render("dashboard/our-services");
 });
 
 app.get("*", (req, res)=>{
