@@ -176,3 +176,32 @@
 
 
 
+// show services 
+
+async function fetchServices(){
+
+    const res = await fetch("http://localhost:8000/services");
+    const data = await res.json();
+    
+    const selectEle = document.getElementById('servicesSelect');
+
+    selectEle.innerHTML = `<option selected disabled>Select A Service</option>`;
+
+    data.forEach((services)=>{
+        const option = document.createElement("option");
+        option.value = services.name;
+        option.textContent = services.name;
+        selectEle.appendChild(option)
+    })
+
+    try {
+        
+    } catch (error) {
+        console.error("Error fetching services:", error);
+    }
+
+
+   
+}
+
+fetchServices();

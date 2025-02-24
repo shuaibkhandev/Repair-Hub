@@ -44,7 +44,7 @@ async function fetchUsers() {
 
 document.addEventListener("click", (e) => {
     const user = document.getElementById("profile");
-     const noti = document.getElementById("noti");
+     const noti = document.getElementById("notiContainer");
      const notiBtn = document.getElementById("showNoti")
     const profileBtn = document.getElementById("showProfile"); // If you have a button to toggle the profile
 
@@ -58,7 +58,7 @@ document.addEventListener("click", (e) => {
 });
 
 const showNoti = () => {
-    const noti = document.getElementById("noti");
+    const noti = document.getElementById("notiContainer");
     noti.classList.toggle("show");
   }
   

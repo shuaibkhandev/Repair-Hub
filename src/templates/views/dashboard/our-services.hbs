@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
       <link rel="stylesheet" href="../css/dashboard.css" />
+      <link rel="stylesheet" href="../css/dashboard/our-services.css">
 
     <style>
     .repair-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
@@ -76,39 +77,30 @@
           </div>
         </div>
 
-      <div class="user-profile-container">
-  <div class="user-header">
-    <div class="user-avatar">
-      <img src="../img/profile.png" alt="Profile Picture">
+
+  <h2>Service Management</h2>
+    <button id="addServiceBtn">+ Add New Service</button>
+
+     <!-- Add Service Form -->
+    <div id="addServiceForm" style="display: none; margin-top: 10px;">
+      <input type="text" id="newServiceName" placeholder="Enter Service Name">
+      <button onclick="addService()">Add</button>
     </div>
-    <div class="user-info">
-      <h2>Shuaib Khan</h2>
-      <p>skhan.csit@gmail.com</p>
-    </div>
-  </div>
-  <hr class="divider">
-  <div class="user-details">
-    <form>
-      <div class="input-group">
-        <label for="user-name">Name:</label>
-        <input type="text" name="user-name" class="input-field" id="UserName" placeholder="Admin">
-      </div>
-      <div class="input-group">
-        <label for="user-email">Email:</label>
-        <input type="email" name="user-email" class="input-field" id="UserEmail" placeholder="admin@gmail.com">
-      </div>
-      <div class="input-group">
-        <label for="user-phone">Phone:</label>
-        <input type="number" name="user-phone" class="input-field" id="UserPhone" placeholder="+92 3423232">
-      </div>
-      <div class="input-group">
-        <label for="user-password">Password:</label>
-        <input type="password" name="user-password" class="input-field" id="UserPassword" placeholder="***************">
-      </div>
-      <button type="submit" class="update-btn">Update</button>
-    </form>
-  </div>
-</div>
+
+
+      <!-- Service List -->
+    <table class="repair-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Service Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="serviceTableBody">
+        <!-- Dynamic data will be inserted here -->
+      </tbody>
+    </table>
 
 
        
@@ -116,5 +108,8 @@
     </div>
     
  <script src="../js/dashboard/script.js"></script>
+ <script src="../js/dashboard/our-services.js">
+ 
+</script>
 </body>
 </html>
