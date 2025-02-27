@@ -5,6 +5,7 @@ const hbs = require('hbs');
 const userRoutes = require("./routes/User");
 const bookingRoutes = require("./routes/Booking");
 const ServicesRoute = require("./routes/Services");
+const ReviewRoute = require("./routes/Review");
 
 
 
@@ -36,6 +37,41 @@ hbs.registerHelper('currentYear', () => {
 app.use("/api/auth", userRoutes);
 app.use("", bookingRoutes);
 app.use("", ServicesRoute);
+app.use("", ReviewRoute);
+
+
+const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
+
+
+const YOUR_DOMAIN = 'http://localhost:8000';
+
+app.post('/create-checkout-session', async (req, res) => {
+  try {
+      const session = await stripe.checkout.sessions.create({
+          payment_method_types: ['card'],
+          line_items: [
+              {
+                  quantity: 1,
+                  price_data: {
+                      currency: 'pkr',
+                      product_data: {
+                          name: "Test"
+                      },
+                      unit_amount: 140 * 100 // Minimum 140 PKR to meet $0.50 USD requirement
+                  }
+              }
+          ],
+          mode: 'payment',
+          success_url: `${YOUR_DOMAIN}/success.html`,
+          cancel_url: `${YOUR_DOMAIN}/cancel.html`,
+      });
+
+      res.redirect(303, session.url); // Send session URL as JSON response
+  } catch (error) {
+      console.error("Error creating checkout session:", error);
+      res.status(500).json({ error: error.message });
+  }
+});
 
 
 
@@ -103,6 +139,18 @@ app.get("/dashboard/profile", (req, res) => {
 
 app.get("/dashboard/our-services", (req, res) => {
   res.render("dashboard/our-services");
+});
+app.get("/review-form", (req, res) => {
+  res.render("review-form");
+});
+app.get("/checkout", (req, res) => {
+  res.render("checkout");
+});
+app.get("/success", (req, res) => {
+  res.render("success");
+});
+app.get("/cancel", (req, res) => {
+  res.render("cancel");
 });
 
 app.get("*", (req, res)=>{
