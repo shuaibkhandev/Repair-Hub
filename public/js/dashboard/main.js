@@ -2,12 +2,17 @@
 
 // checking user isAdmin or not if not then redirect to website home page
 const user = JSON.parse(localStorage.getItem("user"));
-
+console.log(user)
 // Redirect non-admin users
-if (!user && !user.isAdmin) {
+if (!user || !user.isAdmin) {
 window.location.href = "/";
 }
+// logout functionality
 
+function logout(){
+  localStorage.clear("user");
+  window.location.href = '/login'
+}
 
 const showProfile = () => {
     const user = document.getElementById("profile");

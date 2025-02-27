@@ -182,15 +182,16 @@ async function fetchServices(){
 
     const res = await fetch("http://localhost:8000/services");
     const data = await res.json();
-    
     const selectEle = document.getElementById('servicesSelect');
 
     selectEle.innerHTML = `<option selected disabled>Select A Service</option>`;
 
-    data.forEach((services)=>{
+    data.forEach((service)=>{
+
+        
         const option = document.createElement("option");
-        option.value = services.name;
-        option.textContent = services.name;
+        option.value = service.name;
+        option.textContent = service.name;
         selectEle.appendChild(option)
     })
 
@@ -205,3 +206,11 @@ async function fetchServices(){
 }
 
 fetchServices();
+
+
+// logout functionality
+
+function logout(){
+   localStorage.clear("user");
+   window.location.href = '/login'
+}
