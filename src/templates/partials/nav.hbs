@@ -11,8 +11,13 @@
  <div class="container-fluid bg-light d-none d-lg-block">
     <div class="row align-items-center top-bar">
         <div class="col-lg-3 col-md-12 text-center text-lg-start">
+<<<<<<< HEAD
+            <a href="/index" class="navbar-brand m-0 p-0">
+                <h1 class="text-primary m-0">Repair-Hub</h1>
+=======
             <a href="/" class="navbar-brand m-0 p-0">
                 <h1 class="text-primary m-0">RMS</h1>
+>>>>>>> d7734882942358703ad71739a7d35367b41cd041
             </a>
         </div>
         <div class="col-lg-9 col-md-12 text-end">
@@ -22,7 +27,7 @@
             </div>
             <div class="h-100 d-inline-flex align-items-center me-4">
                 <i class="far fa-envelope-open text-primary me-2"></i>
-                <p class="m-0">info@example.com</p>
+                <p class="m-0">Repairhub46@gmail.com</p>
             </div>
            
         </div>
@@ -34,8 +39,13 @@
 <!-- Navbar Start -->
 <div class="container-fluid nav-bar bg-light">
     <nav class="navbar navbar-expand-lg navbar-light bg-white p-3 py-lg-0 px-lg-4">
+<<<<<<< HEAD
+        <a href="" class="navbar-brand d-flex align-items-center m-0 p-0 d-lg-none">
+            <h1 class="text-primary m-0">Repair-Hub</h1>
+=======
         <a href="/" class="navbar-brand d-flex align-items-center m-0 p-0 d-lg-none">
             <h1 class="text-primary m-0">RMS</h1>
+>>>>>>> d7734882942358703ad71739a7d35367b41cd041
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="fa fa-bars"></span>
@@ -59,9 +69,39 @@
             
             
             <!-- ------------search bar  ------------------------ -->
-           <form class=" form-inline my-2 m d-flex">
-             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-           </form>
+           <form class="form-inline d-flex justify-content-center my-3">
+  <div class="input-group" style="max-width: 500px; width: 100%; position: relative;">
+    <!-- Search input -->
+    <input 
+      id="search-input"
+      class="form-control border-primary" 
+      type="search" 
+      placeholder="Search services..." 
+      aria-label="Search" 
+      style="border-radius: 25px 0 0 25px; height: 40px; padding: 10px;">
+    
+    <!-- Search button -->
+    <button 
+      class="btn btn-primary" 
+      type="submit" 
+      style="border-radius: 0 25px 25px 0; height: 40px; padding: 5px 15px;">
+      <i class="fas fa-search"></i>
+    </button>
+    
+    <!-- Filtered services list -->
+    <div 
+      id="filter-list" 
+      class="list-container" 
+      style="position: absolute; top: 45px; left: 0; width: 100%; background: white; border: 1px solid #ddd; border-radius: 0 0 10px 10px; display: none; z-index: 1000;">
+      <ul id="service-list" class="list-group m-0">
+        <li class="list-group-item"><a href="/electrical">Electrical</a></li>
+        <li class="list-group-item"><a href="/plumbing">Plumbing</a></li>
+        <li class="list-group-item"><a href="/carpenter">Carpentry</a></li>
+      </ul>
+    </div>
+    
+  </div>
+</form>
             <!-- search bar end -->
            
 
@@ -85,3 +125,48 @@
     </nav>
 </div>
 <!-- Navbar End -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the current URL path
+        let currentPath = window.location.pathname;
+
+        // Get all nav links
+        let navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+        // Loop through links and check which one matches the current URL
+        navLinks.forEach(link => {
+            if (link.getAttribute("href") === currentPath) {
+                link.classList.add("active");
+            } else {
+                link.classList.remove("active");
+            }
+        });
+    });
+</script>
+
+
+{{!-- search bar  --}}
+<script>
+  $(document).ready(function () {
+    // Show the list when the input is focused
+    $('#search-input').on('focus', function () {
+      $('#filter-list').fadeIn();
+    });
+
+    // Filter the list as the user types
+    $('#search-input').on('input', function () {
+      let query = $(this).val().toLowerCase();
+      $('#service-list li').filter(function () {
+        $(this).toggle($(this).text().toLowerCase().indexOf(query) > -1);
+      });
+    });
+
+    // Hide the list when clicking outside
+    $(document).on('click', function (e) {
+      if (!$(e.target).closest('#search-input, #filter-list').length) {
+        $('#filter-list').fadeOut();
+      }
+    });
+  });
+</script>
