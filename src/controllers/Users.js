@@ -28,8 +28,7 @@ const singnUpUser =  async (req, res) => {
     });
 
     await user.save();
-    res.status(201).json({ message: "User registered successfully." });
-    res.render("/login")
+    res.redirect("/login");
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error." });
