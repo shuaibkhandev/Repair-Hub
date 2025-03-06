@@ -1,3 +1,4 @@
+require("dotenv").config();
 const mongodb = require("./config/__dbConn")
 const express = require("express");
 const path = require("path");
@@ -6,7 +7,7 @@ const userRoutes = require("./routes/User");
 const bookingRoutes = require("./routes/Booking");
 const ServicesRoute = require("./routes/Services");
 const ReviewRoute = require("./routes/Review");
-
+const verifyToken = require("./middlewares/auth")
 
 
 const app = express();
@@ -74,7 +75,11 @@ app.post('/create-checkout-session', async (req, res) => {
 });
 
 
-
+app.get('/protected', verifyToken, (req, res) => {
+  console.log(req.userId);
+  
+  res.status(200).json({ message: 'Protected route accessed' });
+  });
 app.get("/", (req, res) => {
   res.render("index");
 });

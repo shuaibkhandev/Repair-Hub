@@ -2,50 +2,16 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { singnUpUser } = require("../controllers/Users");
 
-const JWT_SECRET = "your_jwt_secret"; // Replace with a secure secret key
+const { singnUpUser, logInUser } = require("../controllers/Users");
+
+
 
 // POST /api/auth/signup
 router.post("/signup", singnUpUser);
 
 // POST /api/auth/login
-router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
-    return res.status(400).json({ error: "Please enter all fields." });
-  }
-
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ error: "Invalid email or password." });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ error: "Invalid email or password." });
-    }
-
-    const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, JWT_SECRET, { expiresIn: "1h" });
-
-    res.json({
-      success: true,
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        isAdmin: user.isAdmin,
-      },
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error." });
-  }
-});
+router.post("/login", logInUser);
 
 // GET /api/auth/users (Get All Users - Excludes Passwords)
 router.get("/users", async (req, res) => {

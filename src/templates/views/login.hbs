@@ -110,6 +110,7 @@
         if (data.success) {
           // Store user data in local storage
           localStorage.setItem("user", JSON.stringify(data.user));
+          localStorage.setItem("token", JSON.stringify(data.token));
 
           alert("Login successful!");
           window.location.href = "/"; // Redirect to dashboard
