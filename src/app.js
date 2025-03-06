@@ -8,7 +8,7 @@ const bookingRoutes = require("./routes/Booking");
 const ServicesRoute = require("./routes/Services");
 const ReviewRoute = require("./routes/Review");
 const verifyToken = require("./middlewares/auth")
-
+const cookieParser = require("cookie-parser")
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -20,6 +20,7 @@ mongodb();
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser())
 
 
 // Set view engine and static assets
@@ -75,11 +76,10 @@ app.post('/create-checkout-session', async (req, res) => {
 });
 
 
-app.get('/protected', verifyToken, (req, res) => {
-  console.log(req.userId);
-  
-  res.status(200).json({ message: 'Protected route accessed' });
-  });
+app.get("/get-token", (req, res) => {
+  const token = req.cookies.token || null;
+  res.json({ token });
+});
 app.get("/", (req, res) => {
   res.render("index");
 });

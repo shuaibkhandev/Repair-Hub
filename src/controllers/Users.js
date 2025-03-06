@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { setUser } = require("../utils/auth");
 const JWT_SECRET = process.env.JWT_SECRET; // Replace with a secure secret key
 const singnUpUser =  async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
@@ -54,11 +55,10 @@ const logInUser = async (req, res) => {
       return res.status(400).json({ error: "Invalid email or password." });
     }
 
-    const token = jwt.sign({ id: user._id , isAdmin: user.isAdmin}, JWT_SECRET, { expiresIn: "1h" });
-
+    const token = setUser(user);
+    res.cookie("token", token);
     res.json({
       success: true,
-      token,
       user: {
         id: user._id,
         name: user.name,

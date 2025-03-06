@@ -108,8 +108,8 @@
     </li>
     <!-- Display username if logged in -->
     <li class="nav-item d-none" id="userDropdown">
-        <a class="btn btn-outline-success my-2 my-sm-0 mx-2" href="#" id="username"></a>
-        <a class="btn btn-outline-danger my-2 my-sm-0 mx-2" href="#" onclick="logout()">Logout</a>
+        <a class="btn btn-outline-success my-2 my-sm-0 mx-2" id="username"></a>
+        <a class="btn btn-outline-danger my-2 my-sm-0 mx-2"  onclick="logout()">Logout</a>
     </li>
 </ul>
             <!-- end -->
@@ -118,7 +118,14 @@
 </div>
 <!-- Navbar End -->
 
+
 <script>
+  function logout(){
+document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+   localStorage.clear("user");
+   window.location.href = '/login'
+}
+
     document.addEventListener("DOMContentLoaded", function () {
         // Get the current URL path
         let currentPath = window.location.pathname;

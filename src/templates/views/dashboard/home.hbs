@@ -90,34 +90,6 @@
 
 <script src="../js/dashboard/main.js"></script>
 <script src="../js/dashboard/home.js"></script>
-<script>
 
-  const token = JSON.parse(localStorage.getItem("token")); // Get token from localStorage
-  if (!token) {
-    alert("Unauthorized! Please log in first.");
-    window.location.href = "/login"; // Redirect to login if no token
-    return;
-  }
-
-  fetch("/dashboard", {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${token}`, // Send token in headers
-      "Content-Type": "application/json"
-    }
-  })
-    .then(response => {
-      if (response.redirected) {
-        window.location.href = response.url; // Redirect if not authorized
-      }
-      return response.text();
-    })
-    .then(data => {
-      document.body.innerHTML = data; // Load the dashboard page content
-    })
-    .catch(error => console.error("Error:", error));
-
-
-</script>
   </body>
 </html>
