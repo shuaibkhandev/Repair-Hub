@@ -126,8 +126,9 @@ app.get("/signup", (req, res) => {
 
 
 // DASHBOARD ROUTES
-app.get("/dashboard", (req, res) => {
-  res.render("dashboard/home");
+app.get("/dashboard", verifyToken , (req, res) => {
+  res.render("dashboard/home", { userId: req.userId, role: req.userRole });
+
 });
 
 app.get("/dashboard/repair-requests", (req, res) => {
