@@ -463,21 +463,7 @@
 
   <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const loginBtn = document.getElementById("loginBtn");
-    const signupBtn = document.getElementById("signupBtn");
-    const userDropdown = document.getElementById("userDropdown");
-    const usernameDisplay = document.getElementById("username");
 
-    if (user) {
-      // Hide login and signup buttons
-      loginBtn.style.display = "none";
-      signupBtn.style.display = "none";
-
-      // Show the username and logout button
-      userDropdown.classList.remove("d-none");
-      usernameDisplay.innerText = user.name; // Display the logged-in user's name
-    }
   });
 
 

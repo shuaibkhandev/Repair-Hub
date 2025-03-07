@@ -1,5 +1,4 @@
 
-
 (function ($) {
     "use strict";
 
@@ -210,16 +209,22 @@ async function fetchServices(){
 fetchServices();
 
 
-// logout functionality
 
-function logout(){
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 
-   localStorage.clear("user");
-   window.location.href = '/login'
+
+
+const user = JSON.parse(localStorage.getItem("user"));
+const loginBtn = document.getElementById("loginBtn");
+const signupBtn = document.getElementById("signupBtn");
+const userDropdown = document.getElementById("userDropdown");
+const usernameDisplay = document.getElementById("username");
+
+if (user) {
+  // Hide login and signup buttons
+  loginBtn.style.display = "none";
+  signupBtn.style.display = "none";
+
+  // Show the username and logout button
+  userDropdown.classList.remove("d-none");
+  usernameDisplay.innerText = user.name; // Display the logged-in user's name
 }
-
-
-const token = JSON.parse(localStorage.getItem("token")); // Get token from localStorage
-
-

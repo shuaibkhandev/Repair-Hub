@@ -123,32 +123,12 @@ app.get("/signup", (req, res) => {
   res.render("singup");
 });
 
-
-
-// DASHBOARD ROUTES
-app.get("/dashboard", verifyToken , (req, res) => {
-  res.render("dashboard/home", { userId: req.userId, role: req.userRole });
-
-});
-
-app.get("/dashboard/repair-requests", (req, res) => {
-  res.render("dashboard/repair-requests");
-});
-
-app.get("/dashboard/users", (req, res) => {
-  res.render("dashboard/users");
-});
-
-app.get("/dashboard/profile", (req, res) => {
-  res.render("dashboard/profile");
-});
-
-app.get("/dashboard/our-services", (req, res) => {
-  res.render("dashboard/our-services");
-});
 app.get("/review-form", (req, res) => {
   res.render("review-form");
 });
+
+
+// payment routes
 app.get("/checkout", (req, res) => {
   res.render("checkout");
 });
@@ -158,6 +138,29 @@ app.get("/success", (req, res) => {
 app.get("/cancel", (req, res) => {
   res.render("cancel");
 });
+
+
+// DASHBOARD ROUTES
+app.get("/dashboard", verifyToken , (req, res) => {
+  res.render("dashboard/home", { userId: req.userId, role: req.userRole });
+});
+
+app.get("/dashboard/repair-requests", verifyToken ,(req, res) => {
+  res.render("dashboard/repair-requests");
+});
+
+app.get("/dashboard/users", verifyToken ,(req, res) => {
+  res.render("dashboard/users");
+});
+
+app.get("/dashboard/profile", verifyToken , (req, res) => {
+  res.render("dashboard/profile");
+});
+
+app.get("/dashboard/our-services", verifyToken , (req, res) => {
+  res.render("dashboard/our-services");
+});
+
 
 app.get("*", (req, res)=>{
   res.render("404")
