@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // Store user data in local storage
             localStorage.setItem("user", JSON.stringify(data.user));
             alert("Login successful!");
+            
             window.location.href = "/"; // Redirect to dashboard
           } else {
             alert(data.error);

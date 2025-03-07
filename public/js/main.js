@@ -228,3 +228,18 @@ if (user) {
   userDropdown.classList.remove("d-none");
   usernameDisplay.innerText = user.name; // Display the logged-in user's name
 }
+
+function showToast(message, type = "success") {
+    Toastify({
+      text: message,
+      duration: 3000,
+      gravity: "top", // or "bottom"
+      position: "right", // or "left", "center"
+      backgroundColor: type === "success" ? "green" : "red",
+    }).showToast();
+  }
+
+  // Example: Show a success toast on page load
+  document.addEventListener("DOMContentLoaded", function () {
+    showToast("Welcome to the Dashboard!", "success");
+  });
