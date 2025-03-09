@@ -84,50 +84,17 @@
 
 
     <!-- Service Start -->
-    <div class="container-xxl py-5">
-        <div class="container py-5 px-lg-5">
-            <div class="wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="text-secondary text-uppercase text-center">Our Services</h6>
-                <h1 class="text-center mb-5">Services We Provide</h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item d-flex flex-column text-center rounded">
-                        <div class="service-icon flex-shrink-0">
-                            <i class="fa fa-bolt  fa-2x"></i>
-                        </div>
-                        <h5 class="mb-3">Electrical</h5>
-                        <p class="m-0">At Repair-Hub,our expert electrician provide Reliable installation,repair and maintenance for all your Electrical needs.From wiring upgrades to emergency repairs,we ensure safety and efficiency.Contact us for quality service.</p>
-                        <!-- <a class="btn btn-square" href=""><i class="fa fa-arrow-right"></i></a> -->
-                    </div>
-                    <a href="/electrical" class="btn bg-white text-primary w-100 mt-2">Explore<i class="fa fa-arrow-right text-secondary ms-2"></i></a>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item d-flex flex-column text-center rounded">
-                        <div class="service-icon flex-shrink-0">
-                            <i class="fa fa-tools fa-2x"></i>
-                        </div>
-                        <h5 class="mb-3">Plumbing</h5>
-                        <p class="m-0">At Repair-Hub,our experienced plumbers provide Reliable installation,repair and maintenance services for all your plumbing needs. Whether it's unclogging drains,fixing leaks, or installing new fixtures,we guarantee prompt and efficient service.</p>
-                        <!-- <a class="btn btn-square" href=""><i class="fa fa-arrow-right"></i></a> -->
-                    </div>
-                    <a href="/plumbing" class="btn bg-white text-primary w-100 mt-2">Explore<i class="fa fa-arrow-right text-secondary ms-2"></i></a>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item d-flex flex-column text-center rounded">
-                        <div class="service-icon flex-shrink-0">
-                            <i class="fas fa-hammer fa-2x"></i>
-                        </div>
-                        <h5 class="mb-3">Carpentry</h5>
-                        <p class="m-0">At Repair-Hub,our Expert Carpenter offer high-quality craftsmanship for all your woodworking needs.From customize furniture to home repairs and installations,we deliver precision and durability.</p>
-                        <!-- <a class="btn btn-square" href=""><i class="fa fa-arrow-right"></i></a> -->
-                    </div>
-                    <a href="/carpenter" class="btn bg-white text-primary w-100 mt-2">Explore<i class="fa fa-arrow-right text-secondary ms-2"></i></a>
-                </div>
-                
-            </div>
+<div class="container-xxl py-5">
+    <div class="container py-5 px-lg-5">
+        <div class="wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="text-secondary text-uppercase text-center">Our Services</h6>
+            <h1 class="text-center mb-5">Services We Provide</h1>
+        </div>
+        <div class="row g-4" id="service-container">
+            <!-- Services will be inserted dynamically -->
         </div>
     </div>
+</div>
     <!-- Service End -->
 
 
@@ -305,6 +272,41 @@
  
 
        {{> footer}}
+
+<script>
+    async function fetchServices() {
+        try {
+            const response = await fetch("http://localhost:8000/api/services");
+            const data = await response.json();
+
+            const serviceContainer = document.getElementById("service-container");
+            serviceContainer.innerHTML = ""; // Clear previous content
+
+            data.forEach(service => {
+                const serviceItem = `
+                    <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="service-item d-flex flex-column text-center rounded">
+                            <div class="service-icon flex-shrink-0">
+                                <i class="${service.icon || 'fa fa-cogs'} fa-2x"></i>
+                            </div>
+                            <h5 class="mb-3">${service.name}</h5>
+                            <p class="m-0">${service.description}</p>
+                        </div>
+                        <a href="/services/${service.slug}" class="btn bg-white text-primary w-100 mt-2">
+                            Explore <i class="fa fa-arrow-right text-secondary ms-2"></i>
+                        </a>
+                    </div>
+                `;
+                serviceContainer.innerHTML += serviceItem;
+            });
+        } catch (error) {
+            console.error("Error fetching services:", error);
+        }
+    }
+
+    // Call the function to fetch services
+    fetchServices();
+</script>
 </body>
 
 </html>

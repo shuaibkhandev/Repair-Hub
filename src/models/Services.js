@@ -1,10 +1,23 @@
 const mongoose = require("mongoose");
 
+const subServiceSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  description: { type: String, required: true },
+  icon: { type: String, required: true },
+  features: [{ type: String, required: true }],
+  booking_link: { type: String, required: true }
+});
 
 const serviceSchema = new mongoose.Schema({
-    name: { type: String, required: true },
-  });
+  name: { type: String, required: true },
+  slug: { type: String, required: true, unique: true },
+  description: { type: String, required: true },
+  price: { type: Number, required: true },
+  duration: { type: String, required: true },
+  image: { type: String, required: true },
+  category: { type: String, required: true },
+  services: [subServiceSchema] // Nested sub-services
+}, { timestamps: true });
 
-
-
-module.exports =  mongoose.model("Service", serviceSchema);
+const Service = mongoose.model("Service", serviceSchema);
+module.exports = Service;

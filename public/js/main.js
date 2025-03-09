@@ -232,14 +232,16 @@ if (user) {
 function showToast(message, type = "success") {
     Toastify({
       text: message,
-      duration: 3000,
+      duration: 5000,
       gravity: "top", // or "bottom"
       position: "right", // or "left", "center"
       backgroundColor: type === "success" ? "green" : "red",
     }).showToast();
   }
 
-  // Example: Show a success toast on page load
-  document.addEventListener("DOMContentLoaded", function () {
-    showToast("Welcome to the Dashboard!", "success");
-  });
+  if (localStorage.getItem("loginToast") === "loginSuccess") {
+    showToast("Logined Successfully", "success");
+
+    // Remove the flag so it doesn't show again on refresh
+    localStorage.removeItem("loginToast");
+  }
