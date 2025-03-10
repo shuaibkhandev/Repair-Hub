@@ -15,53 +15,69 @@
             <a href="/dashboard/services" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Back to Services</a>
         </div>
 
-     <form id="serviceForm">
-    <div class="mb-3">
-        <label for="name" class="form-label">Service Name</label>
-        <input type="text" class="form-control" id="name" name="name" required>
-    </div>
+        <form id="serviceForm">
+            <input type="hidden" id="serviceId" value="{{#if service}}{{service.slug}}{{/if}}">
 
-    <div class="mb-3">
-        <label for="category" class="form-label">Category</label>
-        <input type="text" class="form-control" id="category" name="category" required>
-    </div>
+            <div class="mb-3">
+                <label for="name" class="form-label">Service Name</label>
+                <input type="text" class="form-control" id="name" name="name" value="{{#if service}}{{service.name}}{{/if}}" required>
+            </div>
 
-    <!-- Subcategories Input Section -->
- <div class="mb-3">
-    <label class="form-label">Subcategories</label>
-    <div id="subcategory-container"></div>
-    <button type="button" class="btn btn-primary" id="add-subcategory">Add Subcategory</button>
-</div>
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <input type="text" class="form-control" id="category" name="category" value="{{#if service}}{{service.category}}{{/if}}" required>
+            </div>
 
-    <div class="mb-3">
-        <label for="price" class="form-label">Price ($)</label>
-        <input type="number" class="form-control" id="price" name="price" required>
-    </div>
+            <!-- Subcategories Input Section -->
+            <div class="mb-3">
+                <label class="form-label">Subcategories</label>
+                <div id="subcategory-container">
+                    {{#if service.services}}
+                        {{#each service.services}}
+                            <div class="mb-3 subcategory">
+                                <div class="input-group mb-2">
+                                    <input type="text" class="form-control subcategory-name" placeholder="Subcategory Name" value="{{this.name}}" required>
+                                    <input type="text" class="form-control subcategory-description" placeholder="Description" value="{{this.description}}" required>
+                                    <input type="text" class="form-control subcategory-icon" placeholder="Icon (e.g., fa fa-broom)" value="{{this.icon}}">
+                                    <input type="text" class="form-control subcategory-features" placeholder="Features (comma-separated)" value="{{this.features}}">
+                                    <input type="text" class="form-control subcategory-booking" placeholder="Booking Link" value="{{this.booking_link}}">
+                                    <button type="button" class="btn btn-danger remove-subcategory">Remove</button>
+                                </div>
+                            </div>
+                        {{/each}}
+                    {{/if}}
+                </div>
+                <button type="button" class="btn btn-primary" id="add-subcategory">Add Subcategory</button>
+            </div>
 
-    <div class="mb-3">
-        <label for="duration" class="form-label">Duration</label>
-        <input type="text" class="form-control" id="duration" name="duration" required>
-    </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">Price ($)</label>
+                <input type="number" class="form-control" id="price" name="price" value="{{#if service}}{{service.price}}{{/if}}" required>
+            </div>
 
-    <div class="mb-3">
-        <label for="description" class="form-label">Description</label>
-        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-    </div>
+            <div class="mb-3">
+                <label for="duration" class="form-label">Duration</label>
+                <input type="text" class="form-control" id="duration" name="duration" value="{{#if service}}{{service.duration}}{{/if}}" required>
+            </div>
 
-    <div class="mb-3">
-        <label for="image" class="form-label">Image URL</label>
-        <input type="text" class="form-control" id="image" name="image" required>
-    </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required>{{#if service}}{{service.description}}{{/if}}</textarea>
+            </div>
 
-    <button type="submit" class="btn btn-success">Add Service</button>
-</form>
+            <div class="mb-3">
+                <label for="image" class="form-label">Image URL</label>
+                <input type="text" class="form-control" id="image" name="image" value="{{#if service}}{{service.image}}{{/if}}" required>
+            </div>
 
+            <button type="submit" class="btn btn-success">{{#if service}}Update Service{{else}}Add Service{{/if}}</button>
+        </form>
     </div>
 </div>
 
 {{>footer}}
 
-<!-- JavaScript to Manage Subcategories -->
+<!-- JavaScript to Manage Subcategories and Form Submission -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const container = document.getElementById("subcategory-container");
@@ -114,18 +130,21 @@ document.addEventListener("DOMContentLoaded", function () {
             services: services // Nested subcategories
         };
 
-        console.log("Form Data:", formData);
+        const serviceId = document.getElementById("serviceId").value;
+        console.log(serviceId)
+        const url = serviceId ? `http://localhost:8000/api/services/${serviceId}` : "http://localhost:8000/api/services";
+        const method = serviceId ? "PUT" : "POST";
 
         try {
-            const response = await fetch("http://localhost:8000/api/services", {
-                method: "POST",
+            const response = await fetch(url, {
+                method: method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             });
 
             const result = await response.json();
             if (response.ok) {
-                alert("Service added successfully!");
+                alert(serviceId ? "Service updated successfully!" : "Service added successfully!");
                 window.location.href = "/dashboard/services";
             } else {
                 alert(result.error || "Something went wrong!");

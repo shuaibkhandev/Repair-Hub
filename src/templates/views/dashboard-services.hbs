@@ -38,11 +38,10 @@
                         <a href="/dashboard/services/edit/{{this.slug}}" class="btn btn-warning btn-sm">
                             <i class="fa fa-edit"></i> Edit
                         </a>
-                        <form action="/dashboard/services/delete/{{this.slug}}" method="POST" class="d-inline">
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
-                                <i class="fa fa-trash"></i> Delete
-                            </button>
-                        </form>
+                           <button class="btn btn-danger btn-sm" onclick="deleteService('{{this.slug}}')">
+        <i class="fa fa-trash"></i> Delete
+    </button>
+
                     </td>
                 </tr>
                 {{/each}}
@@ -52,5 +51,25 @@
 </div>
 
 {{>footer}}
+
+<script>
+    function deleteService(slug) {
+    if (confirm("Are you sure you want to delete this service?")) {
+        fetch(`/api/services/${slug}`, {
+            method: "DELETE"
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert("Service deleted successfully");
+                window.location.reload(); // Reload the page to update the table
+            } else {
+                alert("Error deleting service");
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    }
+}
+</script>
 </body>
 </html>
