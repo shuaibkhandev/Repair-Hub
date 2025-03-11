@@ -23,49 +23,81 @@
             </ul>
             
             <div class="text-center">
-                <a id="subservice-booking" href="#" class="btn btn-primary" target="_blank">Book Now</a>
+                <a id="subservice-booking" class="btn btn-primary" >Book Now</a>
+                
             </div>
         </div>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", async function () {
-             const pathParts = window.location.pathname.split("/"); 
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+    const pathParts = window.location.pathname.split("/");
     const subServiceId = pathParts[pathParts.length - 1];
-            console.log(subServiceId)
-            if (!subServiceId) {
-                {{!-- alert("Invalid sub-service ID");
-                window.location.href = "/dashboard/services"; --}}
-            }
-            
-            try {
-                const response = await fetch(`http://localhost:8000/api/services/sub-service/${subServiceId}`);
-                const data = await response.json();
-                
-                if (response.ok) {
-                    document.getElementById("subservice-name").textContent = data.name;
-                    document.getElementById("subservice-description").textContent = data.description;
-                    document.getElementById("subservice-icon").className = data.icon || "fa fa-cog fa-3x";
-                    
-                    const featuresList = document.getElementById("subservice-features");
-                    featuresList.innerHTML = "";
-                    data.features.forEach(feature => {
-                        const li = document.createElement("li");
-                        li.classList.add("list-group-item");
-                        li.textContent = feature;
-                        featuresList.appendChild(li);
+
+    if (!subServiceId) {
+        alert("Invalid sub-service ID");
+        window.location.href = "/dashboard/services";
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:8000/api/services/sub-service/${subServiceId}`);
+        const data = await response.json();
+
+        if (response.ok) {
+            document.getElementById("subservice-name").textContent = data.name;
+            document.getElementById("subservice-description").textContent = data.description;
+            document.getElementById("subservice-icon").className = data.icon || "fa fa-cog fa-3x";
+
+            const featuresList = document.getElementById("subservice-features");
+            featuresList.innerHTML = "";
+            data.features.forEach(feature => {
+                const li = document.createElement("li");
+                li.classList.add("list-group-item");
+                li.textContent = feature;
+                featuresList.appendChild(li);
+            });
+
+            // Update booking button to use a POST request
+            const bookingButton = document.getElementById("subservice-booking");
+            bookingButton.addEventListener("click", async function () {
+                try {
+                    const checkoutResponse = await fetch("http://localhost:8000/create-checkout-session", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            subServiceId: data._id,
+                            name: data.name,
+                            price: 123,
+                            description: data.description,
+                            features: data.features
+                        })
                     });
-                    
-                    document.getElementById("subservice-booking").href = data.booking_link || "#";
-                } else {
-                    {{!-- alert("Failed to load sub-service details");
-                    window.location.href = "/dashboard/services"; --}}
+
+                    const checkoutData = await checkoutResponse.json();
+                    if (checkoutResponse.ok) {
+                        window.location.href = checkoutData.url; // Redirect to Stripe checkout
+                    } else {
+                        alert("Failed to create checkout session.");
+                    }
+                } catch (error) {
+                    console.error("Error creating checkout session:", error);
+                    alert("Server error! Please try again.");
                 }
-            } catch (error) {
-                console.error("Error fetching sub-service:", error);
-                alert("Server error! Please try again.");
-            }
-        });
-    </script>
+            });
+
+        } else {
+            alert("Failed to load sub-service details");
+            window.location.href = "/dashboard/services";
+        }
+    } catch (error) {
+        console.error("Error fetching sub-service:", error);
+        alert("Server error! Please try again.");
+    }
+});
+</script>
+
 </body>
 </html>

@@ -41,36 +41,45 @@ app.use("", bookingRoutes);
 app.use("", ReviewRoute);
 app.use("/api/services", serviceRoutes);
 
-const stripe = require('stripe')('sk_test_4eC39HqLyjWDarjtT1zdp7dc');
-
+const stripe = require('stripe')('sk_test_BQokikJOvBiI2HlWgH4olfQ2');
+const subServices = {
+  "67cd3a4fbf1a099718cd9cc3": { name: "Sub Service A", price: 140 },
+  "2": { name: "Sub Service B", price: 200 },
+};
 
 const YOUR_DOMAIN = 'http://localhost:8000';
-
-app.post('/create-checkout-session', async (req, res) => {
+app.post("/create-checkout-session", async (req, res) => {
   try {
+      const { subServiceId, name, price, description, features } = req.body;
+
       const session = await stripe.checkout.sessions.create({
-          payment_method_types: ['card'],
+          payment_method_types: ["card"],
           line_items: [
               {
-                  quantity: 1,
                   price_data: {
-                      currency: 'pkr',
+                      currency: "usd",
                       product_data: {
-                          name: "Test"
+                          name: name,
+                          description: description
                       },
-                      unit_amount: 140 * 100 // Minimum 140 PKR to meet $0.50 USD requirement
-                  }
+                      unit_amount: price * 100 // Convert price to cents
+                  },
+                  quantity: 1
               }
           ],
-          mode: 'payment',
-          success_url: `${YOUR_DOMAIN}/success.html`,
-          cancel_url: `${YOUR_DOMAIN}/cancel.html`,
+          mode: "payment",
+          success_url: "http://localhost:8000/success",
+          cancel_url: "http://localhost:8000/cancel",
+          metadata: {
+              subServiceId: subServiceId,
+              features: JSON.stringify(features) // Store additional metadata
+          }
       });
 
-      res.redirect(303, session.url); // Send session URL as JSON response
+      res.json({ url: session.url });
   } catch (error) {
       console.error("Error creating checkout session:", error);
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: "Failed to create checkout session" });
   }
 });
 
