@@ -27,8 +27,6 @@
                     <th>#</th>
                     <th>Service Name</th>
                     <th>Category</th>
-                    <th>Price</th>
-                    <th>Duration</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -38,8 +36,7 @@
                     <td>{{@index}}</td>
                     <td>{{this.name}}</td>
                     <td>{{this.category}}</td>
-                    <td>${{this.price}}</td>
-                    <td>{{this.duration}}</td>
+
                     <td>
                         <a href="/dashboard/services/edit/{{this.slug}}" class="btn btn-warning btn-sm">
                             <i class="fa fa-edit"></i> Edit

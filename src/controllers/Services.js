@@ -29,20 +29,21 @@ exports.getServiceBySlug = async (req, res) => {
 // Create a New Service
 exports.createService = async (req, res) => {
   try {
-    const { name, slug, description, price, duration, image, category, services } = req.body;
+    const { name, slug, description, image, category, services } = req.body;
 
     const newService = new Service({
       name,
       slug,
       description,
-      price,
-      duration,
       image,
       category,
-      services // Include nested sub-services
+      services
     });
 
-    await newService.save();
+
+    const data = await newService.save();
+    console.log(data);
+    
     res.status(201).json({ message: "Service created successfully", service: newService });
   } catch (error) {
     res.status(500).json({ error: "Server error" });

@@ -13,20 +13,19 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const service = await response.json();
+        
 
         // Update page header title
         headerTitle.textContent = service.name;
 
         // Update breadcrumb navigation
         breadcrumbItems[2].textContent = service.name;
-
         // Populate the page with service details
         serviceDetailsContainer.innerHTML = `
             <h1>${service.name}</h1>
             <p>${service.description}</p>
-            <p><strong>Price:</strong> ${service.price}</p>
-            <p><strong>Duration:</strong> ${service.duration}</p>
         `;
+
 
         // Check if the service has sub-services
         if (service.services && service.services.length > 0) {
@@ -44,9 +43,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                     </div>
                     <h4 class="mb-3">${subService.name}</h4>
                     <p>${subService.description}</p>
-                    <ul>
-                        ${subService.features.map(feature => `<li>${feature}</li>`).join("")}
-                    </ul>
+                  
                     <a href="/dashboard/sub-service/${subService._id}" class="btn bg-white text-primary w-100 mt-2">
                         Book Now <i class="fa fa-arrow-right text-secondary ms-2"></i>
                     </a>

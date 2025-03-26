@@ -44,10 +44,11 @@ header {
   align-items: center;
 }
 
-.logo {
+.logo a {
   font-size: 27px;
   font-weight: 600;
   color: rgb(47, 141, 70);
+  text-decoration: none;
 }
 
 .icn {

@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 
 function setUser(user){
-    return jwt.sign({user}, process.env.JWT_SECRET, { expiresIn: "1h" });
+    return jwt.sign({user}, process.env.JWT_SECRET);
 }
 
 

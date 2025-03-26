@@ -10,17 +10,17 @@
 <body>
     <div class="container mt-5">
         <div class="card shadow-lg p-4">
-            <h2 id="subservice-name" class="text-center mb-3">Sub Service Name</h2>
-            <p id="subservice-description" class="text-muted text-center">Description of the sub-service goes here.</p>
+          
             
             <div class="text-center my-3">
                 <i id="subservice-icon" class="fa fa-broom fa-3x"></i>
             </div>
             
-            <h5 class="mt-4">Features:</h5>
-            <ul id="subservice-features" class="list-group mb-4">
-                <!-- Features will be dynamically added here -->
-            </ul>
+            <h5 class="mt-4"></h5>
+           <h5 id="subservice-name" class="text-center mb-3"></h5>
+            <p id="subservice-description" class="text-muted text-center"></p>
+             <p id="subservice-duration" class="text-muted text-center"></p>
+             <p id="subservice-price" class="text-muted text-center"></p>
             
             <div class="text-center">
                 <a id="subservice-booking" class="btn btn-primary" >Book Now</a>
@@ -47,16 +47,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (response.ok) {
             document.getElementById("subservice-name").textContent = data.name;
             document.getElementById("subservice-description").textContent = data.description;
-            document.getElementById("subservice-icon").className = data.icon || "fa fa-cog fa-3x";
-
-            const featuresList = document.getElementById("subservice-features");
-            featuresList.innerHTML = "";
-            data.features.forEach(feature => {
-                const li = document.createElement("li");
-                li.classList.add("list-group-item");
-                li.textContent = feature;
-                featuresList.appendChild(li);
-            });
+            document.getElementById("subservice-duration").textContent = "duration " + data.duration;
+            document.getElementById("subservice-price").textContent = "price " + data.price+"$";
+          
+        
 
             // Update booking button to use a POST request
             const bookingButton = document.getElementById("subservice-booking");
@@ -70,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                         body: JSON.stringify({
                             subServiceId: data._id,
                             name: data.name,
-                            price: 123,
+                            price: data.price,
                             description: data.description,
                             features: data.features
                         })
