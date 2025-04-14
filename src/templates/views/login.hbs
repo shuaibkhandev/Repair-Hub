@@ -24,13 +24,7 @@
   <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
     <p class="lead fw-normal mb-0 me-3">Sign in with</p>
     <button type="button" class="btn btn-primary btn-floating mx-1">
-      <i class="fab fa-facebook-f"></i>
-    </button>
-    <button type="button" class="btn btn-primary btn-floating mx-1">
-      <i class="fab fa-twitter"></i>
-    </button>
-    <button type="button" class="btn btn-primary btn-floating mx-1">
-      <i class="fab fa-linkedin-in"></i>
+      <i class="fab fa-google"></i>
     </button>
   </div>
 
@@ -44,22 +38,15 @@
     <label class="form-label" for="email">Email address</label>
   </div>
 
-  <!-- Password input -->
-  <div class="form-outline mb-3">
-    <input type="password" name="password" id="password" class="form-control form-control-lg" placeholder="Enter password" required />
-    <label class="form-label" for="password">Password</label>
-  </div>
+       <!-- Password input -->
+<div class="form-outline mb-2 position-relative">
+  <input type="password" name="password" id="password" class="form-control form-control-lg"
+    placeholder="Enter password" required />
+  <label class="form-label" for="password">Password</label>
+  <i class="fa fa-eye toggle-password" toggle="#password" style="position:absolute; right:15px; top:30%; transform:translateY(-50%); cursor:pointer;"></i>
+</div>
 
-  <div class="d-flex justify-content-between align-items-center">
-    <!-- Checkbox -->
-    <div class="form-check mb-0">
-      <input class="form-check-input me-2" type="checkbox" value="" id="rememberMe" />
-      <label class="form-check-label" for="rememberMe">
-        Remember me
-      </label>
-    </div>
-    <a href="#!" class="text-body">Forgot password?</a>
-  </div>
+
 
   <div class="text-center text-lg-start mt-4 pt-2">
     <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
@@ -93,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
   
       if (loginForm) {
         loginForm.addEventListener("submit", async function (event) {
-          event.preventDefault(); // Prevent default form submission
+          event.preventDefault(); 
   
           const email = document.getElementById("email").value;
           const password = document.getElementById("password").value;
@@ -109,18 +96,27 @@ document.addEventListener("DOMContentLoaded", function () {
           const data = await response.json();
   
           if (data.success) {
-            // Store user data in local storage
             localStorage.setItem("user", JSON.stringify(data.user));
-              // Example: Show a success toast on page load
   localStorage.setItem("loginToast", "loginSuccess");
 
             
-            window.location.href = "/"; // Redirect to dashboard
+            window.location.href = "/"; 
           } else {
             alert(data.error);
           }
         });
       }
+        // Toggle show/hide password
+    const toggleIcons = document.querySelectorAll(".toggle-password");
+    toggleIcons.forEach(icon => {
+      icon.addEventListener("click", function () {
+        const input = document.querySelector(this.getAttribute("toggle"));
+        const type = input.getAttribute("type") === "password" ? "text" : "password";
+        input.setAttribute("type", type);
+        this.classList.toggle("fa-eye");
+        this.classList.toggle("fa-eye-slash");
+      });
+    });
     });
 </script>
 </body>

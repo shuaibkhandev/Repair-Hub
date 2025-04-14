@@ -233,15 +233,16 @@ function showToast(message, type = "success") {
     Toastify({
       text: message,
       duration: 5000,
-      gravity: "top", // or "bottom"
-      position: "right", // or "left", "center"
+      gravity: "top",
+      position: "right", 
       backgroundColor: type === "success" ? "green" : "red",
     }).showToast();
   }
 
   if (localStorage.getItem("loginToast") === "loginSuccess") {
     showToast("Logined Successfully", "success");
-
-    // Remove the flag so it doesn't show again on refresh
     localStorage.removeItem("loginToast");
+  }else if(localStorage.getItem("signupToast") === "signupSuccess"){
+    showToast("Registerd Successfully", "success");
+    localStorage.removeItem("signupToast");
   }

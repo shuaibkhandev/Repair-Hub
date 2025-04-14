@@ -1,56 +1,59 @@
 document.addEventListener("DOMContentLoaded", async function () {
     const serviceDetailsContainer = document.querySelector(".service-details .container");
-    const headerTitle = document.querySelector(".page-header h1");
+    const headerTitle = document.querySelectorAll(".service-name");
     const breadcrumbItems = document.querySelectorAll(".breadcrumb-item");
-    const serviceCarousel = document.querySelector(".service-carousel"); // Select the carousel
+    const serviceCarousel = document.querySelector(".service-carousel");
+    const serviceImage = document.getElementById("service-image");
 
-    // Get the slug from the URL
     const slug = window.location.pathname.split("/").pop();
 
     try {
-        // Fetch service details
         const response = await fetch(`/api/services/${slug}`);
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const service = await response.json();
-        
 
-        // Update page header title
-        headerTitle.textContent = service.name;
+        // Update title
+        headerTitle.forEach(title => {
+            title.textContent = service.name;
+        });
 
-        // Update breadcrumb navigation
+        // Update service image
+        if (service.image && serviceImage) {
+            serviceImage.src = "http://localhost:8000/" + service.image;
+            serviceImage.alt = service.name;
+        }
+
+        // Update breadcrumb
         breadcrumbItems[2].textContent = service.name;
-        // Populate the page with service details
+
+        // Description section
         serviceDetailsContainer.innerHTML = `
             <h1>${service.name}</h1>
             <p>${service.description}</p>
         `;
 
-
-        // Check if the service has sub-services
+        // Sub-services carousel
         if (service.services && service.services.length > 0) {
-            // Destroy existing Owl Carousel instance if initialized before
             if ($(".service-carousel").hasClass("owl-loaded")) {
                 $(".service-carousel").trigger("destroy.owl.carousel").removeClass("owl-loaded");
-                $(".service-carousel").html(""); // Clear old items
+                $(".service-carousel").html("");
             }
 
-            // Populate service carousel with sub-services
             serviceCarousel.innerHTML = service.services.map(subService => `
-                <div class="item bg-light p-4">
-                    <div class="d-flex align-items-center justify-content-center border border-5 border-white mb-4" style="width: 75px; height: 75px;">
-                        <i class="${subService.icon} fa-2x text-primary"></i>
+                <div class="item bg-light p-4 text-center">
+                    <div class=" m-auto mb-3 text-center" style="width:88px; height:88px; border-radius:50%">
+                        <img src="${'http://localhost:8000/'+ subService.image}" alt="${subService.name}" class="img-fluid rounded" style="height:100%; width:100%; border-radius:50%">
                     </div>
-                    <h4 class="mb-3">${subService.name}</h4>
-                    <p>${subService.description}</p>
-                  
+                    <h4 class="mb-2">${subService.name}</h4>
+                    <p class="mb-2">${subService.description}</p>
+                    <p class="text-muted"><i class="fa fa-clock"></i> ${subService.duration} | <strong>$${subService.price}</strong></p>
                     <a href="/dashboard/sub-service/${subService._id}" class="btn bg-white text-primary w-100 mt-2">
                         Book Now <i class="fa fa-arrow-right text-secondary ms-2"></i>
                     </a>
                 </div>
             `).join("");
 
-            // Wait for elements to be added to the DOM before initializing Owl Carousel
             setTimeout(() => {
                 $(".service-carousel").owlCarousel({
                     loop: true,

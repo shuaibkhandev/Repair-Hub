@@ -2,7 +2,10 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { setUser } = require("../utils/auth");
-const JWT_SECRET = process.env.JWT_SECRET; // Replace with a secure secret key
+const JWT_SECRET = process.env.JWT_SECRET;
+
+
+
 const singnUpUser =  async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
 
@@ -29,7 +32,7 @@ const singnUpUser =  async (req, res) => {
     });
 
     await user.save();
-    res.status(201).json({ message: 'User registered successfully' });
+    res.status(201).json({ success:true,message: 'User registered successfully' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Registration failed' });

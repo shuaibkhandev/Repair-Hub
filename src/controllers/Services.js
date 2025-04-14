@@ -29,26 +29,40 @@ exports.getServiceBySlug = async (req, res) => {
 // Create a New Service
 exports.createService = async (req, res) => {
   try {
-    const { name, slug, description, image, category, services } = req.body;
+    const { name, slug, description, services } = req.body;
+
+    // Main service image path from multer
+    const serviceImage = req.files["image"]?.[0]?.path;
+
+    // Parse sub-services array from string (if coming from a form or frontend)
+    let parsedServices = [];
+    if (services) {
+      parsedServices = JSON.parse(services);
+
+      // Add each subImage to the corresponding sub-service
+      parsedServices.forEach((sub, index) => {
+        sub.image = req.files["subImages"]?.[index]?.path || "";
+      });
+    }
 
     const newService = new Service({
       name,
       slug,
       description,
-      image,
-      category,
-      services
+      image: serviceImage,
+      services: parsedServices
     });
-
 
     const data = await newService.save();
     console.log(data);
-    
+
     res.status(201).json({ message: "Service created successfully", service: newService });
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    console.error(error.message);
+    res.status(500).json({ error: "Server error", details: error.message });
   }
 };
+
 
 exports.getSubServiceDetails = async (req, res) => {
   try {

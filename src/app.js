@@ -9,9 +9,13 @@ const ReviewRoute = require("./routes/Review");
 const serviceRoutes = require("./routes/Services");
 const verifyToken = require("./middlewares/auth")
 const cookieParser = require("cookie-parser")
+const techniciansRoute = require('./routes/Technician');
 const axios = require("axios");
 const app = express();
+const Technician = require("./models/Technician")
+const upload = require("./middlewares/upload")
 const port = process.env.PORT || 8000;
+const methodOverride = require('method-override');
 
 // Connecte to DB
 mongodb();
@@ -21,7 +25,7 @@ mongodb();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
-
+app.use(methodOverride('_method'));
 
 // Set view engine and static assets
 app.set("views", path.join(__dirname, "templates/views"));
@@ -34,12 +38,14 @@ hbs.registerHelper('currentYear', () => {
   return new Date().getFullYear();
 });
 
-
+app.use("/uploads", express.static("uploads"));
 // Routes
 app.use("/api/auth", userRoutes);
 app.use("", bookingRoutes);
 app.use("", ReviewRoute);
 app.use("/api/services", serviceRoutes);
+app.use('/api/technicians', techniciansRoute);
+
 
 const stripe = require('stripe')('sk_test_BQokikJOvBiI2HlWgH4olfQ2');
 const subServices = {
@@ -106,18 +112,11 @@ app.get("/service", (req, res) => {
 app.get("/carpenter", (req, res) => {
   res.render("carpenter");
 });
-app.get("/plumbing", (req, res) => {
-  res.render("plumbing");
-});
-app.get("/electrical", (req, res) => {
-  res.render("electrical");
-});
+
 app.get("/contact", (req, res) => {
   res.render("contact");
 });
-app.get("/booking", (req, res) => {
-  res.render("booking");
-});
+
 app.get("/team", (req, res) => {
   res.render("team");
 });
@@ -201,6 +200,49 @@ app.get("/dashboard/services/:action/:slug?", async (req, res) => {
 
 app.get("/dashboard/sub-service/:id", verifyToken, (req, res) => {
   res.render("sub-service.hbs", { subServiceId: req.params.id });
+});
+
+// Show all technicians
+app.get('/technicians', async (req, res) => {
+  const technicians = await Technician.find();
+  res.render('technician', { technicians });
+});
+
+// Show add form
+app.get('/addtechnician', (req, res) => {
+  res.render('addTechnician');
+});
+
+// // Create technician
+// app.post('/addtechnician', upload.fields([{ name: 'photo', maxCount: 1 }]), async (req, res) => {
+//   const { name, expertise, experience } = req.body;
+//   const photo = req.files?.photo?.[0]?.path || '';
+//   await Technician.create({ name, expertise, experience, photoUrl: photo });
+//   res.redirect('/');
+// });
+
+// // Show edit form
+app.get('/edit/:id', async (req, res) => {
+  const technician = await Technician.findById(req.params.id);
+  res.render('editTechnician', { technician });
+});
+
+// Update technician
+app.put('/edit/:id', upload.fields([{ name: 'photo', maxCount: 1 }]), async (req, res) => {
+  const { name, expertise, experience } = req.body;
+  const photo = req.files?.photo?.[0]?.path;
+
+  await Technician.findByIdAndUpdate(req.params.id, {
+    name, expertise, experience, ...(photo && { photoUrl: photo })
+  });
+
+  res.redirect('/');
+});
+
+// Delete technician
+app.delete('/delete/:id', async (req, res) => {
+  await Technician.findByIdAndDelete(req.params.id);
+  res.redirect('/');
 });
 
 

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technicians</title>
+    {{>head}}
+</head>
+<body>
+    <h2>Edit Technician</h2>
+<form action="/api/technicians/edit/{{technician._id}}?_method=PUT" method="POST" enctype="multipart/form-data">
+  <input type="text" name="name" value="{{technician.name}}" required /><br>
+  <input type="text" name="expertise" value="{{technician.expertise}}" required /><br>
+  <input type="number" name="experience" value="{{technician.experience}}" required /><br>
+  <p>Current Photo:</p>
+  <img src="/{{technician.photoUrl}}" width="100" /><br>
+  <input type="file" name="photo" /><br>
+  <button type="submit">Update</button>
+</form>
+
+
+</body>
+</html>
