@@ -6,7 +6,7 @@ const Customer = require('../models/Customer');
 // Use express.raw to read raw buffer
 router.post('/', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature'];
-  const endpointSecret = 'whsec_f3193d72144c25483f89fae963d792e4f9ed0dc657c16f22a1540e1b32b89495';
+  const endpointSecret = process.env.WEBHOOK_SECRET;
 
   let event;
   try {
