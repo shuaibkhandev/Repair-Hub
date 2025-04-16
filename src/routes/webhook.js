@@ -1,13 +1,12 @@
-// routes/webhook.js
 const express = require('express');
 const router = express.Router();
 const stripe = require('stripe')('sk_test_BQokikJOvBiI2HlWgH4olfQ2');
 const Customer = require('../models/Customer');
 
-const endpointSecret = 'your_webhook_secret'; // Replace with your actual webhook secret
-
-router.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+// Use express.raw to read raw buffer
+router.post('/', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature'];
+  const endpointSecret = 'whsec_f3193d72144c25483f89fae963d792e4f9ed0dc657c16f22a1540e1b32b89495';
 
   let event;
   try {
@@ -25,15 +24,19 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
       const customerData = {
         name: session.customer_details.name,
         email: session.customer_details.email,
+        phone: session.customer_details.phone || session.metadata.phone,
         address: session.customer_details.address,
         subServiceId: session.metadata.subServiceId,
         features: JSON.parse(session.metadata.features || '[]'),
+        serviceName: session.metadata.serviceName,       // ✅ updated here
+        servicePrice: parseFloat(session.metadata.servicePrice || 0),
+        status: session.metadata.status || 'pending',
       };
 
       await Customer.create(customerData);
-      console.log("Customer saved:", customerData);
+      console.log('Customer saved:', customerData);
     } catch (err) {
-      console.error("Error saving customer:", err.message);
+      console.error('Error saving customer:', err.message);
     }
   }
 

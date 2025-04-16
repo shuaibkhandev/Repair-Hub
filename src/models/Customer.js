@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const customerSchema = new mongoose.Schema({
   name: String,
   email: String,
+  phone: String,
   address: {
     city: String,
     country: String,
@@ -12,9 +13,17 @@ const customerSchema = new mongoose.Schema({
     postal_code: String,
     state: String,
   },
+  serviceName: String,         // ✅ changed from serverName
+  servicePrice: Number,
+  status: {
+    type: String,
+    default: 'pending',
+    enum: ['pending', 'confirmed', 'completed', 'cancelled'],
+  },
   subServiceId: String,
   features: [String],
   createdAt: { type: Date, default: Date.now }
 });
+
 
 module.exports = mongoose.model('Customer', customerSchema);

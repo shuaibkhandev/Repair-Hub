@@ -19,7 +19,7 @@ const methodOverride = require('method-override');
 const webhookRoute = require('./routes/webhook');
 // Connecte to DB
 mongodb();
-
+app.use('/webhook', webhookRoute);
 
 // Middleware to parse JSON and URL-encoded data
 app.use(express.json());
@@ -45,9 +45,9 @@ app.use("", bookingRoutes);
 app.use("", ReviewRoute);
 app.use("/api/services", serviceRoutes);
 app.use('/api/technicians', verifyToken , techniciansRoute);
-app.use('/webhook', webhookRoute);
 
-const stripe = require('stripe')('sk_test_BQokikJOvBiI2HlWgH4olfQ2');
+
+const stripe = require('stripe')('sk_test_51REPg5IkYKSYdDnUyR9TQCRYzFT2ltMnP0fbR2Y74rKMOyJmXRqr4CHkFgMwzlTn1J0zy74kABzKp527LbRKUoDa00frSur56w');
 const subServices = {
   "67cd3a4fbf1a099718cd9cc3": { name: "Sub Service A", price: 140 },
   "2": { name: "Sub Service B", price: 200 },
@@ -56,42 +56,57 @@ const subServices = {
 const YOUR_DOMAIN = 'http://localhost:8000';
 app.post("/create-checkout-session", async (req, res) => {
   try {
-      const { subServiceId, name, price, description, features } = req.body;
+    const {
+      subServiceId,
+      name,
+      price,
+      description,
+      features,
+      customerName,
+      customerEmail,
+      customerPhone
+    } = req.body;
 
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: [
-          {
-            price_data: {
-              currency: "usd", // Note: Stripe doesn't support PKR directly
-              product_data: {
-                name: name,
-                description: description
-              },
-              unit_amount: price * 100
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: name, // this is your service name
+              description: description
             },
-            quantity: 1
-          }
-        ],
-        mode: "payment",
-        success_url: `${YOUR_DOMAIN}/success`,
-        cancel_url: `${YOUR_DOMAIN}/cancel`,
-        billing_address_collection: 'required',
-        shipping_address_collection: {
-          allowed_countries: ['PK'] // Only Pakistan
-        },
-        customer_creation: 'always',
-        metadata: {
-          subServiceId: subServiceId,
-          features: JSON.stringify(features)
+            unit_amount: price * 100
+          },
+          quantity: 1
         }
-      });
-      
+      ],
+      mode: "payment",
+      success_url: `${YOUR_DOMAIN}/success`,
+      cancel_url: `${YOUR_DOMAIN}/cancel`,
+      billing_address_collection: 'required',
+      shipping_address_collection: {
+        allowed_countries: ['PK']
+      },
+      customer_creation: 'always',
+      customer_email: customerEmail, // this pre-fills email at checkout
+      metadata: {
+        subServiceId: subServiceId,
+        features: JSON.stringify(features),
+        serviceName: name,
+        servicePrice: price.toString(),
+        customerName: customerName,
+        customerEmail: customerEmail,
+        customerPhone: customerPhone,
+        status: 'pending'
+      }
+    });
 
-      res.json({ url: session.url });
+    res.json({ url: session.url });
   } catch (error) {
-      console.error("Error creating checkout session:", error);
-      res.status(500).json({ error: "Failed to create checkout session" });
+    console.error("Error creating checkout session:", error);
+    res.status(500).json({ error: "Failed to create checkout session" });
   }
 });
 
