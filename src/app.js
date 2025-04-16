@@ -16,7 +16,7 @@ const Technician = require("./models/Technician")
 const upload = require("./middlewares/upload")
 const port = process.env.PORT || 8000;
 const methodOverride = require('method-override');
-
+const webhookRoute = require('./routes/webhook');
 // Connecte to DB
 mongodb();
 
@@ -44,8 +44,8 @@ app.use("/api/auth", userRoutes);
 app.use("", bookingRoutes);
 app.use("", ReviewRoute);
 app.use("/api/services", serviceRoutes);
-app.use('/api/technicians', techniciansRoute);
-
+app.use('/api/technicians', verifyToken , techniciansRoute);
+app.use('/webhook', webhookRoute);
 
 const stripe = require('stripe')('sk_test_BQokikJOvBiI2HlWgH4olfQ2');
 const subServices = {
@@ -59,28 +59,34 @@ app.post("/create-checkout-session", async (req, res) => {
       const { subServiceId, name, price, description, features } = req.body;
 
       const session = await stripe.checkout.sessions.create({
-          payment_method_types: ["card"],
-          line_items: [
-              {
-                  price_data: {
-                      currency: "usd",
-                      product_data: {
-                          name: name,
-                          description: description
-                      },
-                      unit_amount: price * 100 // Convert price to cents
-                  },
-                  quantity: 1
-              }
-          ],
-          mode: "payment",
-          success_url: "http://localhost:8000/success",
-          cancel_url: "http://localhost:8000/cancel",
-          metadata: {
-              subServiceId: subServiceId,
-              features: JSON.stringify(features) // Store additional metadata
+        payment_method_types: ["card"],
+        line_items: [
+          {
+            price_data: {
+              currency: "usd", // Note: Stripe doesn't support PKR directly
+              product_data: {
+                name: name,
+                description: description
+              },
+              unit_amount: price * 100
+            },
+            quantity: 1
           }
+        ],
+        mode: "payment",
+        success_url: `${YOUR_DOMAIN}/success`,
+        cancel_url: `${YOUR_DOMAIN}/cancel`,
+        billing_address_collection: 'required',
+        shipping_address_collection: {
+          allowed_countries: ['PK'] // Only Pakistan
+        },
+        customer_creation: 'always',
+        metadata: {
+          subServiceId: subServiceId,
+          features: JSON.stringify(features)
+        }
       });
+      
 
       res.json({ url: session.url });
   } catch (error) {
@@ -203,46 +209,30 @@ app.get("/dashboard/sub-service/:id", verifyToken, (req, res) => {
 });
 
 // Show all technicians
-app.get('/technicians', async (req, res) => {
+app.get('/technicians', verifyToken , async (req, res) => {
   const technicians = await Technician.find();
   res.render('technician', { technicians });
 });
 
 // Show add form
-app.get('/addtechnician', (req, res) => {
+app.get('/addtechnician', verifyToken ,(req, res) => {
   res.render('addTechnician');
 });
 
-// // Create technician
-// app.post('/addtechnician', upload.fields([{ name: 'photo', maxCount: 1 }]), async (req, res) => {
-//   const { name, expertise, experience } = req.body;
-//   const photo = req.files?.photo?.[0]?.path || '';
-//   await Technician.create({ name, expertise, experience, photoUrl: photo });
-//   res.redirect('/');
-// });
+
 
 // // Show edit form
-app.get('/edit/:id', async (req, res) => {
+app.get('/edit/:id',verifyToken, async (req, res) => {
   const technician = await Technician.findById(req.params.id);
   res.render('editTechnician', { technician });
 });
 
-// Update technician
-app.put('/edit/:id', upload.fields([{ name: 'photo', maxCount: 1 }]), async (req, res) => {
-  const { name, expertise, experience } = req.body;
-  const photo = req.files?.photo?.[0]?.path;
 
-  await Technician.findByIdAndUpdate(req.params.id, {
-    name, expertise, experience, ...(photo && { photoUrl: photo })
-  });
-
-  res.redirect('/');
-});
 
 // Delete technician
-app.delete('/delete/:id', async (req, res) => {
+app.delete('/delete/:id',verifyToken, async (req, res) => {
   await Technician.findByIdAndDelete(req.params.id);
-  res.redirect('/');
+  res.redirect('/technicians');
 });
 
 

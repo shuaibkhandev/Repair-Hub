@@ -14,7 +14,7 @@ exports.createTechnician = async (req, res) => {
     });
 
     const savedTech = await newTechnician.save();
-    res.status(201).json({ message: 'Technician created', technician: savedTech });
+    res.redirect("/technicians")
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -40,8 +40,7 @@ exports.getTechnicianById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-// Update
+// controller/technicianController.js
 exports.updateTechnician = async (req, res) => {
   try {
     const { name, expertise, experience } = req.body;
@@ -59,18 +58,21 @@ exports.updateTechnician = async (req, res) => {
     );
 
     if (!updated) return res.status(404).json({ message: 'Not found' });
-    res.json({ message: 'Updated successfully', technician: updated });
+
+    // Redirect to HBS technicians list after update
+    res.redirect("/technicians");
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 // Delete
 exports.deleteTechnician = async (req, res) => {
   try {
     const deleted = await Technician.findByIdAndDelete(req.params.id);
     if (!deleted) return res.status(404).json({ message: 'Not found' });
-    res.json({ message: 'Deleted successfully' });
+    res.redirect('/technicians');
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
