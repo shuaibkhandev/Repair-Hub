@@ -17,7 +17,8 @@ const hbs = require('hbs');
 // Parse cookies in HTTP requests
 const cookieParser = require("cookie-parser");
 
-// Route modules for different parts of the app
+
+// -------------------- Route modules for different parts of the app -------------------- //
 const userRoutes = require("./routes/User");           // Auth routes (signup/login)
 const bookingRoutes = require("./routes/Booking");     // Booking logic
 const ReviewRoute = require("./routes/Review");        // Reviews system
@@ -45,6 +46,8 @@ const methodOverride = require('method-override');
 // Connecte to DB
 mongodb();
 
+
+// -------------------- Middlewares -------------------- //
 
 // Handle Stripe webhooks before body-parser middleware (must access raw body for signature verification)
 app.use('/webhook', webhookRoute);
@@ -107,7 +110,8 @@ app.get("/get-token", (req, res) => {
   res.json({ token });
 });
 
-// Public Site Pages
+
+// -------------------- Public Site Pages -------------------- //
 app.get("/", (req, res) => {
   res.render("index"); // Home page
 });
@@ -242,9 +246,8 @@ app.delete('/dashboard/delete/:id', verifyToken, async (req, res) => {
 });
 
 
+// -------------------- Stripe Checkout & Payment Result Pages -------------------- //
 
-
-// Stripe Checkout & Payment Result Pages
 app.get("/checkout", (req, res) => {
   res.render("checkout");
 });
