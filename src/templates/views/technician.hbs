@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Our Expert Technicians</h1>
-<a href="/addtechnician">+ Add Technician</a>
+<a href="/dashboard/addtechnician">+ Add Technician</a>
 <table border="1">
   <tr>
     <th>Photo</th>
@@ -24,8 +24,8 @@
     <td>{{this.expertise}}</td>
     <td>{{this.experience}}</td>
     <td>
-      <a href="/edit/{{this._id}}">Edit</a>
-      <form method="POST" action="/delete/{{this._id}}?_method=DELETE" style="display:inline;">
+      <a href="/dashboard/edit/{{this._id}}">Edit</a>
+      <form method="POST" action="/dashboard/delete/{{this._id}}?_method=DELETE" style="display:inline;">
         <button type="submit" onclick="return confirm('Delete this technician?')">Delete</button>
       </form>
     </td>

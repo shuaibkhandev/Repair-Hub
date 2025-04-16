@@ -14,7 +14,7 @@ exports.createTechnician = async (req, res) => {
     });
 
     const savedTech = await newTechnician.save();
-    res.redirect("/technicians")
+    res.redirect("/dashboard/technicians")
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -60,7 +60,7 @@ exports.updateTechnician = async (req, res) => {
     if (!updated) return res.status(404).json({ message: 'Not found' });
 
     // Redirect to HBS technicians list after update
-    res.redirect("/technicians");
+    res.redirect("/dashboard/technicians");
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

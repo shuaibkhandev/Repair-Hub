@@ -1,197 +1,188 @@
+// Load environment variables from .env file into process.env
 require("dotenv").config();
-const mongodb = require("./config/__dbConn")
+
+// Import Express framework
 const express = require("express");
+const app = express(); // Create an Express application
+
+// Built-in Node.js module to handle file paths
 const path = require("path");
+
+// MongoDB connection configuration
+const mongodb = require("./config/__dbConn");
+
+// Handlebars view engine
 const hbs = require('hbs');
-const userRoutes = require("./routes/User");
-const bookingRoutes = require("./routes/Booking");
-const ReviewRoute = require("./routes/Review");
-const serviceRoutes = require("./routes/Services");
-const verifyToken = require("./middlewares/auth")
-const cookieParser = require("cookie-parser")
-const techniciansRoute = require('./routes/Technician');
+
+// Parse cookies in HTTP requests
+const cookieParser = require("cookie-parser");
+
+// Route modules for different parts of the app
+const userRoutes = require("./routes/User");           // Auth routes (signup/login)
+const bookingRoutes = require("./routes/Booking");     // Booking logic
+const ReviewRoute = require("./routes/Review");        // Reviews system
+const serviceRoutes = require("./routes/Services");    // Services API
+const techniciansRoute = require('./routes/Technician'); // Technicians management
+const stripeRoutes = require('./routes/Stripe');       // Stripe payments & checkout
+const webhookRoute = require('./routes/webhook');      // Stripe webhook handler
+
+
+// Middleware for protected routes (JWT verification)
+const verifyToken = require("./middlewares/auth");
+
+// Axios for making HTTP requests (e.g., calling internal APIs)
 const axios = require("axios");
-const app = express();
-const Technician = require("./models/Technician")
-const upload = require("./middlewares/upload")
+
+// Technician model (for direct DB operations)
+const Technician = require("./models/Technician");
+
+// Port configuration for the app (fallback to 8000)
 const port = process.env.PORT || 8000;
+
+// Allows overriding HTTP methods (e.g., PUT or DELETE in forms)
 const methodOverride = require('method-override');
-const webhookRoute = require('./routes/webhook');
+
 // Connecte to DB
 mongodb();
+
+
+// Handle Stripe webhooks before body-parser middleware (must access raw body for signature verification)
 app.use('/webhook', webhookRoute);
 
-// Middleware to parse JSON and URL-encoded data
+// Middleware to parse incoming JSON requests
 app.use(express.json());
+
+// Middleware to parse URL-encoded payloads (e.g., form submissions)
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser())
+
+// Middleware to parse cookies from incoming requests
+app.use(cookieParser());
+
+// Support for HTTP verbs like PUT and DELETE via query parameter (_method)
 app.use(methodOverride('_method'));
 
-// Set view engine and static assets
+// Set the directory for view templates
 app.set("views", path.join(__dirname, "templates/views"));
+
+// Set Handlebars (hbs) as the view engine
 app.set("view engine", "hbs");
+
+// Serve static files like CSS, JS, images from the public directory
 app.use(express.static(path.join(__dirname, "../public")));
+
+// Register reusable Handlebars partials (components like header, footer)
 hbs.registerPartials(path.join(__dirname, "templates/partials"));
 
-// Register a helper called "currentYear"
+
+// Register a Handlebars helper to get the current year (used in templates)
 hbs.registerHelper('currentYear', () => {
   return new Date().getFullYear();
 });
 
+// Serve uploaded files from the /uploads path
 app.use("/uploads", express.static("uploads"));
-// Routes
+
+// API routes for user authentication (signup, login, etc.)
 app.use("/api/auth", userRoutes);
+
+// Routes for handling bookings (create, view, etc.)
 app.use("", bookingRoutes);
+
+// Routes for submitting and viewing reviews
 app.use("", ReviewRoute);
+
+// Routes for CRUD operations on services
 app.use("/api/services", serviceRoutes);
+
+// Routes for managing technicians (protected with token verification)
 app.use('/api/technicians', verifyToken , techniciansRoute);
 
+// Routes related to Stripe payment processing (checkout session, success/cancel pages)
+app.use('', stripeRoutes);
 
 
-const subServices = {
-  "67cd3a4fbf1a099718cd9cc3": { name: "Sub Service A", price: 140 },
-  "2": { name: "Sub Service B", price: 200 },
-};
-
-const YOUR_DOMAIN = 'http://localhost:8000';
-app.post("/create-checkout-session", async (req, res) => {
-  try {
-    const {
-      subServiceId,
-      name,
-      price,
-      description,
-      features,
-      customerName,
-      customerEmail,
-      customerPhone
-    } = req.body;
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "usd",
-            product_data: {
-              name: name, // this is your service name
-              description: description
-            },
-            unit_amount: price * 100
-          },
-          quantity: 1
-        }
-      ],
-      mode: "payment",
-      success_url: `${YOUR_DOMAIN}/success`,
-      cancel_url: `${YOUR_DOMAIN}/cancel`,
-      billing_address_collection: 'required',
-      shipping_address_collection: {
-        allowed_countries: ['PK']
-      },
-      customer_creation: 'always',
-      customer_email: customerEmail, // this pre-fills email at checkout
-      metadata: {
-        subServiceId: subServiceId,
-        features: JSON.stringify(features),
-        serviceName: name,
-        servicePrice: price.toString(),
-        customerName: customerName,
-        customerEmail: customerEmail,
-        customerPhone: customerPhone,
-        status: 'pending'
-      }
-    });
-
-    res.json({ url: session.url });
-  } catch (error) {
-    console.error("Error creating checkout session:", error);
-    res.status(500).json({ error: "Failed to create checkout session" });
-  }
-});
-
-
+// API to get token from cookies (used for auth verification on client-side)
 app.get("/get-token", (req, res) => {
   const token = req.cookies.token || null;
   res.json({ token });
 });
+
+// Public Site Pages
 app.get("/", (req, res) => {
-  res.render("index");
+  res.render("index"); // Home page
 });
+
 app.get("/about", (req, res) => {
-  res.render("about");
+  res.render("about"); // About Us page
 });
 
 app.get("/about/*", (req, res) => {
-  res.render("404");
+  res.render("404"); // Catch invalid about subpaths
 });
-
 
 app.get("/service", (req, res) => {
-  res.render("service");
+  res.render("service"); // General services page
 });
+
 app.get("/carpenter", (req, res) => {
-  res.render("carpenter");
+  res.render("carpenter"); // Specific service category: Carpenter
 });
 
 app.get("/contact", (req, res) => {
-  res.render("contact");
+  res.render("contact"); // Contact Us page
 });
 
 app.get("/team", (req, res) => {
-  res.render("team");
+  res.render("team"); // Our team page
 });
+
 app.get("/testimonial", (req, res) => {
-  res.render("testimonial");
+  res.render("testimonial"); // Testimonials from customers
 });
+
 app.get("/login", (req, res) => {
-  res.render("login");
+  res.render("login"); // Login page
 });
+
 app.get("/signup", (req, res) => {
-  res.render("singup");
+  res.render("singup"); // Signup page
 });
 
 app.get("/review-form", (req, res) => {
-  res.render("review-form");
+  res.render("review-form"); // Page to submit a review
 });
+
 app.get("/services/:slug", (req, res) => {
-  res.render("service-details"); // Renders the service details page
+  res.render("service-details"); // Dynamic page for a single service (by slug)
 });
 
 
-// payment routes
-app.get("/checkout", (req, res) => {
-  res.render("checkout");
-});
-app.get("/success", (req, res) => {
-  res.render("success");
-});
-app.get("/cancel", (req, res) => {
-  res.render("cancel");
-});
 
 
-// DASHBOARD ROUTES
+// -------------------- DASHBOARD ROUTES (Require Auth) -------------------- //
+
 app.get("/dashboard", verifyToken , (req, res) => {
-  res.render("dashboard/home", { userId: req.userId, role: req.userRole });
+  res.render("dashboard/home", { userId: req.userId, role: req.userRole }); // Admin dashboard home
 });
 
 app.get("/dashboard/repair-requests", verifyToken ,(req, res) => {
-  res.render("dashboard/repair-requests");
+  res.render("dashboard/repair-requests"); // View all repair requests
 });
 
 app.get("/dashboard/users", verifyToken ,(req, res) => {
-  res.render("dashboard/users");
+  res.render("dashboard/users"); // View all users
 });
 
 app.get("/dashboard/profile", verifyToken , (req, res) => {
-  res.render("dashboard/profile");
+  res.render("dashboard/profile"); // User profile page
 });
 
 app.get("/dashboard/our-services", verifyToken , (req, res) => {
-  res.render("dashboard/our-services");
+  res.render("dashboard/our-services"); // Custom services section
 });
-// Fetch all services for dashboard
+
+
+// List all services from API and display in dashboard
 app.get("/dashboard/services", async (req, res) => {
   try {
       const response = await axios.get("http://localhost:8000/api/services");
@@ -202,6 +193,7 @@ app.get("/dashboard/services", async (req, res) => {
   }
 });
 
+// Render service form dynamically for create/edit
 app.get("/dashboard/services/:action/:slug?", async (req, res) => {
   try {
       const { action, slug } = req.params;
@@ -219,43 +211,60 @@ app.get("/dashboard/services/:action/:slug?", async (req, res) => {
   }
 });
 
+// Create or edit a sub-service under a main service
 app.get("/dashboard/sub-service/:id", verifyToken, (req, res) => {
   res.render("sub-service.hbs", { subServiceId: req.params.id });
 });
 
-// Show all technicians
-app.get('/technicians', verifyToken , async (req, res) => {
+
+
+// List all technicians
+app.get('/dashboard/technicians', verifyToken , async (req, res) => {
   const technicians = await Technician.find();
   res.render('technician', { technicians });
 });
 
-// Show add form
-app.get('/addtechnician', verifyToken ,(req, res) => {
+// Show form to add new technician
+app.get('/dashboard/addtechnician', verifyToken ,(req, res) => {
   res.render('addTechnician');
 });
 
-
-
-// // Show edit form
-app.get('/edit/:id',verifyToken, async (req, res) => {
+// Show form to edit an existing technician
+app.get('/dashboard/edit/:id', verifyToken, async (req, res) => {
   const technician = await Technician.findById(req.params.id);
   res.render('editTechnician', { technician });
 });
 
-
-
-// Delete technician
-app.delete('/delete/:id',verifyToken, async (req, res) => {
+// Delete a technician from DB
+app.delete('/dashboard/delete/:id', verifyToken, async (req, res) => {
   await Technician.findByIdAndDelete(req.params.id);
-  res.redirect('/technicians');
+  res.redirect('/dashboard/technicians');
 });
 
 
+
+
+// Stripe Checkout & Payment Result Pages
+app.get("/checkout", (req, res) => {
+  res.render("checkout");
+});
+app.get("/success", (req, res) => {
+  res.render("success");
+});
+app.get("/cancel", (req, res) => {
+  res.render("cancel");
+});
+
+
+// Catch-All Route (404 page)
 app.get("*", (req, res)=>{
   res.render("404")
 })
 
 
+
+
+// -------------------- SERVER LISTENER -------------------- //
 app.listen(port, () => {
   console.log(`App is listening at port ${port}`);
 });
