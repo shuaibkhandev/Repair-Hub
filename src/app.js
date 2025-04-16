@@ -47,7 +47,7 @@ app.use("/api/services", serviceRoutes);
 app.use('/api/technicians', verifyToken , techniciansRoute);
 
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET);
+
 const subServices = {
   "67cd3a4fbf1a099718cd9cc3": { name: "Sub Service A", price: 140 },
   "2": { name: "Sub Service B", price: 200 },
