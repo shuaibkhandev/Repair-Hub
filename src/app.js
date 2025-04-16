@@ -163,6 +163,7 @@ app.get("/services/:slug", (req, res) => {
 
 
 
+
 // -------------------- DASHBOARD ROUTES (Require Auth) -------------------- //
 
 app.get("/dashboard", verifyToken , (req, res) => {
@@ -244,6 +245,7 @@ app.delete('/dashboard/delete/:id', verifyToken, async (req, res) => {
   await Technician.findByIdAndDelete(req.params.id);
   res.redirect('/dashboard/technicians');
 });
+
 
 
 // -------------------- Stripe Checkout & Payment Result Pages -------------------- //
