@@ -26,6 +26,7 @@ const serviceRoutes = require("./routes/Services");    // Services API
 const techniciansRoute = require('./routes/Technician'); // Technicians management
 const stripeRoutes = require('./routes/Stripe');       // Stripe payments & checkout
 const webhookRoute = require('./routes/webhook');      // Stripe webhook handler
+const CustomersRoute = require('./routes/Customers');      // Customers Management
 
 
 // Middleware for protected routes (JWT verification)
@@ -51,6 +52,8 @@ mongodb();
 
 // Handle Stripe webhooks before body-parser middleware (must access raw body for signature verification)
 app.use('/webhook', webhookRoute);
+
+
 
 // Middleware to parse incoming JSON requests
 app.use(express.json());
@@ -99,6 +102,10 @@ app.use("/api/services", serviceRoutes);
 
 // Routes for managing technicians (protected with token verification)
 app.use('/api/technicians', verifyToken , techniciansRoute);
+
+// Routes Customers
+app.use('/api', CustomersRoute);
+
 
 // Routes related to Stripe payment processing (checkout session, success/cancel pages)
 app.use('', stripeRoutes);
@@ -217,7 +224,7 @@ app.get("/dashboard/services/:action/:slug?", async (req, res) => {
 });
 
 // Create or edit a sub-service under a main service
-app.get("/dashboard/sub-service/:id", verifyToken, (req, res) => {
+app.get("/dashboard/sub-service/:id", (req, res) => {
   res.render("sub-service.hbs", { subServiceId: req.params.id });
 });
 

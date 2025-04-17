@@ -88,7 +88,22 @@ exports.getSubServiceDetails = async (req, res) => {
 exports.updateService = async (req, res) => {
   try {
     const { slug } = req.params;
-    const { name, description, price, duration, image, category, services } = req.body;
+    const { name, description,  services } = req.body;
+
+    const serviceImage = req.files["image"]?.[0]?.path;
+
+      // Parse sub-services array from string (if coming from a form or frontend)
+      let parsedServices = [];
+      if (services) {
+        parsedServices = JSON.parse(services);
+  
+        // Add each subImage to the corresponding sub-service
+        parsedServices.forEach((sub, index) => {
+          sub.image = req.files["subImages"]?.[index]?.path || "";
+        });
+      }
+
+
 
     // Find the service by slug and update it
     const updatedService = await Service.findOneAndUpdate(
@@ -96,12 +111,9 @@ exports.updateService = async (req, res) => {
       {
         name,
         slug: name.toLowerCase().replace(/\s+/g, "-"), // Update slug dynamically
-        description,
-        price,
-        duration,
-        image,
-        category,
-        services, // Update nested sub-services
+      description,
+      image: serviceImage,
+      services: parsedServices
       },
       { new: true } // Return the updated document
     );
