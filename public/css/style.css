@@ -615,9 +615,7 @@ label {
     transition: .5s;
 }
 
-.team-item:hover img {
-    transform: scale(1.1);
-}
+
 
 .team-item .team-text {
     height: 90px;
@@ -639,9 +637,7 @@ label {
     flex-direction: row;
 }
 
-.team-item:hover .team-text .bg-light {
-    margin-top: -90px;
-}
+
 
 .team-item .team-text .bg-primary .btn {
     color: var(--primary);

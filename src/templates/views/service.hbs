@@ -99,14 +99,14 @@
 
 
 
-    <!-- Team Start -->
+     <!-- Team Start -->
     <div class="container-xxl py-5">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                 <h6 class="text-secondary text-uppercase">Our Technicians</h6>
                 <h1 class="mb-5">Our Expert Technicians</h1>
             </div>
-            <div class="row g-4">
+            <div class="row g-4" id="technicians">
                 <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
@@ -305,6 +305,44 @@
 
     // Call the function to fetch services
     fetchServices();
+
+      
+  async function loadTechnicians() {
+    try {
+      const res = await fetch('http://localhost:8000/api/technicians');
+      const data = await res.json();
+
+      const container = document.getElementById('technicians');
+      container.innerHTML = ''; // Clear existing static cards
+
+       data.forEach((tech, index) => {
+        const delay = 0.1 + (index * 0.2); // optional delay if you want wow animation
+
+        const card = document.createElement('div');
+        card.className = 'col-lg-3 col-md-6';
+        card.innerHTML = `
+          <div class="team-item">
+            <div class="position-relative overflow-hidden">
+              <img class="img-fluid" src="${tech.photoUrl.replace('\\', '/')}" alt="${tech.name}">
+            </div>
+            <div class="team-text">
+              <div class="bg-light">
+                <h5 class="fw-bold mb-0">${tech.name}</h5>
+                <small>${tech.expertise}</small>
+              </div>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    } catch (err) {
+      console.error('Error loading technicians:', err);
+    }
+  }
+
+  // Call the function when the DOM is ready
+  document.addEventListener('DOMContentLoaded', loadTechnicians);
 </script>
 </body>
 

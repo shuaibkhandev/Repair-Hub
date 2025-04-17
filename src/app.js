@@ -101,7 +101,7 @@ app.use("", ReviewRoute);
 app.use("/api/services", serviceRoutes);
 
 // Routes for managing technicians (protected with token verification)
-app.use('/api/technicians', verifyToken , techniciansRoute);
+app.use('/api/technicians' , techniciansRoute);
 
 // Routes Customers
 app.use('/api', CustomersRoute);
