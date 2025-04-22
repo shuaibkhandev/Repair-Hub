@@ -10,6 +10,8 @@
     />
     <title>Dashboard</title>
     <link rel="stylesheet" href="../css/dashboard.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   </head>
 
   <style>
@@ -81,6 +83,7 @@
     <th>Service Price</th>
     <th>Address</th>
     <th>Status</th>
+      <th>Summery</th>
               </thead>
               <tbody id="booking-list">
                 <!-- Data will be inserted here -->
@@ -141,6 +144,7 @@
             ${booking.address?.city || ""}, 
             ${booking.address?.postal_code || ""}
           </td>
+          
           <td>
         <select class="status-select" data-id="${booking._id}">
           <option value="pending" ${booking.status === 'pending' ? 'selected' : ''}>Pending</option>
@@ -148,7 +152,10 @@
           <option value="success" ${booking.status === 'success' ? 'selected' : ''}>Success</option>
         </select>
       </td>
-      
+      <td>
+  <button onclick="generatePDF(${JSON.stringify(booking).replace(/"/g, '&quot;')})">Print</button>
+</td>
+
         `;
     
         bookingList.appendChild(row);
@@ -196,6 +203,48 @@
     }
   }
 });
+
+
+async function generatePDF(user) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // Add company name as header
+  doc.setFontSize(18);
+  doc.text("RepairHub - Service Booking Summary", 105, 20, null, null, "center");
+
+  // Add a horizontal line
+  doc.setLineWidth(0.5);
+  doc.line(20, 25, 190, 25);
+
+  // Booking Details Title
+  doc.setFontSize(14);
+  doc.text("Customer Booking Details", 20, 35);
+
+  // Set content font
+  doc.setFontSize(12);
+  let y = 45;
+
+  const lines = [
+    [`Name`, user.name],
+    [`Email`, user.email],
+    [`Phone`, user.phone || "N/A"],
+    [`Service Name`, user.serviceName],
+    [`Service Price`, `Rs. ${user.servicePrice}`],
+    [`Address`, `${user.address?.line1 || ""}, ${user.address?.line2 || ""}, ${user.address?.city || ""}, ${user.address?.postal_code || ""}`],
+    [`Status`, user.status],
+  ];
+
+  lines.forEach(([label, value]) => {
+    doc.text(`${label}:`, 20, y);
+    doc.text(String(value), 70, y);
+    y += 10;
+  });
+
+  // Save the file
+  doc.save(`${user.name.replace(/\s+/g, "_")}_Service_Booking.pdf`);
+}
+
 </script>
  
      <script src="../js/dashboard/script.js"></script>
