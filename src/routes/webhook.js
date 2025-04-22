@@ -19,7 +19,7 @@ router.post('/', express.raw({ type: 'application/json' }), async (req, res) => 
   // Handle the event
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-
+console.log(session);
     try {
       const customerData = {
         name: session.customer_details.name,

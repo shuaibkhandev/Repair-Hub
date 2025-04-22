@@ -62,4 +62,27 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
+router.patch("/:id/role", async (req, res) => {
+  const {id} = req.params;
+  const {role} = req.body;
+
+  const allowedRole = [true, false];
+
+  if(!allowedRole.includes(role)){
+    return res.status(400).json({ error: 'Invalid role. It should be Boolean' });
+  }
+  try {
+    const updateUserRole = await User.findByIdAndUpdate(id, {isAdmin:role}, {new:true});
+    
+    if (!updateUserRole) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+    res.json(updateUserRole);
+    
+  } catch (error) {
+    console.error('Error updating status:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+})
+
 module.exports = router;

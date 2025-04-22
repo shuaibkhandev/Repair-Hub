@@ -53,7 +53,7 @@
                 <tr>
                   <th>Name</th>
                   <th>Email</th>
-                  <th>Phone</th>
+                  <th>Role</th>
                 </tr>
               </thead>
               <tbody id="users-list">
@@ -82,9 +82,48 @@ async function fetchUsers() {
       row.innerHTML = `
         <td>${user.name}</td>
         <td>${user.email}</td>
-        <td>${user.phone || "N/A"}</td>
+        <td>
+        <select class='role-select' role-id='${user._id}'>
+        <option value="true" ${user.isAdmin === true ? "selected" : ""}>True</option>
+        <option value="false" ${user.isAdmin === false ? "selected" : ""}>False</option>
+        </select>
+        </td>
       `;
       tableBody.appendChild(row);
+      const select = row.querySelector(".role-select");
+
+select.addEventListener("change", async (e) => {
+  const userId = select.getAttribute("role-id");
+  console.log(userId)
+  const newRole = e.target.value === "true"; 
+
+   const confirmed = window.confirm("Are you sure you want to update the user role?");
+  if (!confirmed) {
+    // If the user cancels, reset the select back to its original value
+    select.value = user.isAdmin.toString();
+    return;
+  }
+
+  try {
+    const response = await fetch(`http://localhost:8000/api/auth/${userId}/role`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ role: newRole }),
+    });
+
+    if (response.ok) {
+    alert("User role updated successfully.");
+    } else {
+        alert("Failed to update user role.");
+    }
+  } catch (error) {
+   console.error("Error updating role:", error);
+    alert("An error occurred while updating the user role.");
+  }
+});
+
     });
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -97,6 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-    </script> --}}
+    </script>
   </body>
 </html>
