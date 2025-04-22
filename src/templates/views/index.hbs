@@ -312,7 +312,7 @@
     const isUser = JSON.parse(localStorage.getItem("user"));
 // Redirect non-admin users
 
-if (isUser || isUser.isAdmin) {
+if (isUser && isUser.isAdmin) {
 const dbBtn = document.getElementById('dashboard-btn');
 dbBtn.style.display='block'
 dbBtn.addEventListener("click", ()=>{
