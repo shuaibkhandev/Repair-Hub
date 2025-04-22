@@ -12,6 +12,7 @@
 
 <body>
      
+     {{>dashboardBtn}}
 
     <!-- Topbar Start -->
 
@@ -308,6 +309,16 @@
 
 
 <script>
+    const isUser = JSON.parse(localStorage.getItem("user"));
+// Redirect non-admin users
+
+if (isUser || isUser.isAdmin) {
+const dbBtn = document.getElementById('dashboard-btn');
+dbBtn.style.display='block'
+dbBtn.addEventListener("click", ()=>{
+  location.href = "/dashboard"
+})
+}
     async function fetchServices() {
         try {
             const response = await fetch("http://localhost:8000/api/services");
