@@ -246,3 +246,121 @@ function showToast(message, type = "success") {
     showToast("Registerd Successfully", "success");
     localStorage.removeItem("signupToast");
   }
+
+
+
+
+
+
+
+  const API_URL = "http://localhost:8000/reviews";
+const LOGIN_PAGE = "http://localhost:8000/login"; // Update this to your actual login page
+
+const stars = document.querySelectorAll(".star");
+const reviewText = document.getElementById("reviewText");
+const submitReview = document.getElementById("submitReview");
+const reviewsContainer = document.getElementById("reviewsContainer");
+
+let selectedRating = 0;
+
+// Function to check if user is logged in
+function isUserLoggedIn() {
+    return localStorage.getItem("user") !== null; // Check if token exists (Assuming JWT authentication)
+}
+
+// Redirect to login if not logged in
+function redirectToLogin() {
+    alert("You must be logged in to submit a review!");
+    window.location.href = LOGIN_PAGE;
+}
+
+// Handle star click
+stars.forEach(star => {
+    star.addEventListener("click", () => {
+        selectedRating = star.getAttribute("data-value");
+        updateStars(selectedRating);
+    });
+});
+
+// Update star styles
+function updateStars(rating) {
+    stars.forEach(star => {
+        star.classList.remove("active");
+        if (star.getAttribute("data-value") <= rating) {
+            star.classList.add("active");
+        }
+    });
+}
+
+// Fetch and display reviews
+async function loadReviews() {
+    try {
+        const response = await fetch(API_URL);
+        const reviews = await response.json();
+
+        // Filter only approved reviews
+        const approvedReviews = reviews.filter(r => r.status === "approved");
+
+        reviewsContainer.innerHTML = approvedReviews.length
+            ? approvedReviews.map(r => 
+                `<div class="review">
+                    <div class="text"><strong>Name:</strong> ${r.name}</div>
+                    <div class="rating">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div>
+                    <div class="text"><strong>Review:</strong> ${r.text}</div>
+                </div>`
+            ).join("")
+            : "No approved reviews available.";
+    } catch (error) {
+        console.error("Error fetching reviews:", error);
+    }
+}
+
+// Handle review submission
+submitReview.addEventListener("click", async () => {
+    if (!isUserLoggedIn()) {
+        redirectToLogin();
+        return;
+    }
+
+    const text = reviewText.value.trim();
+    if (!selectedRating || !text) {
+        alert("Please provide a rating and review!");
+        return;
+    }
+
+    try {
+        // Get user info from localStorage
+        const user = JSON.parse(localStorage.getItem("user")); // Ensure stored as JSON
+        if (!user || !user.name || !user.email) {
+            alert("User information is missing. Please log in again.");
+            redirectToLogin();
+            return;
+        }
+
+        const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("userToken")}` // Assuming token is stored separately
+            },
+            body: JSON.stringify({ 
+                name: user.name, 
+                email: user.email, 
+                rating: selectedRating, 
+                text 
+            })
+        });
+
+        if (!response.ok) throw new Error("Failed to submit review");
+
+        reviewText.value = "";
+        updateStars(0);
+        selectedRating = 0;
+        loadReviews();
+    } catch (error) {
+        console.error("Error submitting review:", error);
+    }
+});
+
+// Load reviews on page load
+loadReviews();

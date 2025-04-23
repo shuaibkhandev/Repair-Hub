@@ -32,4 +32,21 @@ router.get("/reviews", async (req, res) => {
     }
 });
 
+router.put("/reviews/:id/status", async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+  
+    if (!["pending", "approved"].includes(status)) {
+      return res.status(400).json({ error: "Invalid status" });
+    }
+  
+    try {
+      const review = await Review.findByIdAndUpdate(id, { status }, { new: true });
+      if (!review) return res.status(404).json({ error: "Review not found" });
+      res.status(200).json(review);
+    } catch (err) {
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+
 module.exports = router;

@@ -802,3 +802,88 @@ height: 100%;
 }
 
 
+
+
+/* Revew */
+
+
+/* Review Section */
+.review-section {
+    max-width: 1600px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 8px;
+
+}
+
+/* Star Rating */
+.review-section .stars {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.review-section .star {
+    font-size: 30px;
+    cursor: pointer;
+    color: #ccc;
+    transition: color 0.2s;
+}
+
+.review-section .star:hover,
+.review-section .star.active {
+    color: gold;
+}
+
+/* Text Area */
+.review-section textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Submit Button */
+.review-section button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.review-section button:hover {
+    background: #0056b3;
+}
+
+.customers-review-title{
+    margin-top: 50px;
+}
+/* Reviews Display */
+#reviewsContainer {
+    margin-top: 20px;
+    padding: 10px;
+    text-align: left;
+}
+
+.review {
+    background: #ffffff!important;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 1px 2px #f6f6f6;
+}
+
+.review .rating {
+    color: gold;
+}
+
+.review .text {
+    margin-top: 5px;
+}

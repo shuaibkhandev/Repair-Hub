@@ -15,6 +15,7 @@
     />
     <title>Edit Technician</title>
     <link rel="stylesheet" href="/css/dashboard.css" />
+             <link rel="stylesheet" href="/css/bootstrap.min.css">
   </head>
 
   <body>
@@ -25,22 +26,44 @@
 
     <div class="main-container">
      {{>dashboardSidebar}}
-      <div class="main">
+   <div class="container my-5">
+  <div class="main">
+    <h2 class="mb-4">Edit Technician</h2>
 
-     
-
-          <h2>Edit Technician</h2>
-<form action="/api/technicians/edit/{{technician._id}}?_method=PUT" method="POST" enctype="multipart/form-data">
-  <input type="text" name="name" value="{{technician.name}}" required /><br>
-  <input type="text" name="expertise" value="{{technician.expertise}}" required /><br>
-  <input type="number" name="experience" value="{{technician.experience}}" required /><br>
-  <p>Current Photo:</p>
-  <img src="/{{technician.photoUrl}}" width="100" /><br>
-  <input type="file" name="photo" /><br>
-  <button type="submit">Update</button>
-</form>
-<a href="/dashboard/technicians">← Back</a>
+    <form action="/api/technicians/edit/{{technician._id}}?_method=PUT" method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm">
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" name="name" value="{{technician.name}}" class="form-control" id="name" required />
       </div>
+
+      <div class="mb-3">
+        <label for="expertise" class="form-label">Expertise</label>
+        <input type="text" name="expertise" value="{{technician.expertise}}" class="form-control" id="expertise" required />
+      </div>
+
+      <div class="mb-3">
+        <label for="experience" class="form-label">Experience (years)</label>
+        <input type="number" name="experience" value="{{technician.experience}}" class="form-control" id="experience" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Current Photo</label><br>
+        <img src="/{{technician.photoUrl}}" width="100" class="img-thumbnail mb-2" />
+      </div>
+
+      <div class="mb-3">
+        <label for="photo" class="form-label">Change Photo</label>
+        <input type="file" name="photo" class="form-control" id="photo" />
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <a href="/dashboard/technicians" class="btn btn-secondary">← Back</a>
+        <button type="submit" class="btn btn-success">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
     </div>
 
 </div>

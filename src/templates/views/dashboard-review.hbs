@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/css/dashboard.css" />
+           <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <title>Customers Reveiws</title>
+</head>
+<body>
+
+      <div class="dashboard-wrapper">
+    <!-- for header part -->
+   {{>dashboardHeader}}
+
+    <div class="main-container">
+     {{>dashboardSidebar}}
+      <div class="main">
+
+   
+    <div class="container my-5">
+  <h2 class="mb-4">Customer Reviews</h2>
+
+  <div class="table-responsive">
+    <table class="table table-bordered align-middle text-center">
+      <thead class="table-light">
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Rating</th>
+          <th>Review</th>
+          <th>Status</th>
+          <th>Submitted</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="reviewTableBody">
+        <!-- Review rows will be injected here -->
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+
+<script>
+  async function fetchReviews() {
+    try {
+      const res = await fetch("/reviews");
+      const reviews = await res.json();
+      const tableBody = document.getElementById("reviewTableBody");
+      tableBody.innerHTML = "";
+
+      reviews.forEach(review => {
+        const row = `
+          <tr>
+            <td>${review.name}</td>
+            <td>${review.email}</td>
+            <td class="text-warning">${'★'.repeat(review.rating)}</td>
+            <td>${review.text}</td>
+            <td>
+              <span class="badge bg-${review.status === 'approved' ? 'success' : 'secondary'}">
+                ${review.status}
+              </span>
+            </td>
+            <td>${new Date(review.createdAt).toLocaleDateString()}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-${review.status === 'approved' ? 'secondary' : 'success'}"
+                onclick="changeStatus('${review._id}', '${review.status}')">
+                ${review.status === 'approved' ? 'Mark Pending' : 'Approve'}
+              </button>
+            </td>
+          </tr>
+        `;
+        tableBody.insertAdjacentHTML("beforeend", row);
+      });
+    } catch (err) {
+      console.error("Failed to fetch reviews", err);
+    }
+  }
+
+  async function changeStatus(id, currentStatus) {
+    const newStatus = currentStatus === "approved" ? "pending" : "approved";
+    try {
+      const res = await fetch(`/reviews/${id}/status`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      if (res.ok) {
+        fetchReviews(); // refresh the table
+      } else {
+        alert("Failed to update status");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // Load on page
+  document.addEventListener("DOMContentLoaded", fetchReviews);
+</script>
+
+</body>
+</html>

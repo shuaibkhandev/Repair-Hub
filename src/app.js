@@ -19,8 +19,7 @@ const cookieParser = require("cookie-parser");
 
 
 // -------------------- Route modules for different parts of the app -------------------- //
-const userRoutes = require("./routes/User");           // Auth routes (signup/login)
-const bookingRoutes = require("./routes/Booking");     // Booking logic
+const userRoutes = require("./routes/User");           // Auth routes (signup/login)  // Booking logic
 const ReviewRoute = require("./routes/Review");        // Reviews system
 const serviceRoutes = require("./routes/Services");    // Services API
 const techniciansRoute = require('./routes/Technician'); // Technicians management
@@ -91,8 +90,6 @@ app.use("/uploads", express.static("uploads"));
 // API routes for user authentication (signup, login, etc.)
 app.use("/api/auth", userRoutes);
 
-// Routes for handling bookings (create, view, etc.)
-app.use("", bookingRoutes);
 
 // Routes for submitting and viewing reviews
 app.use("", ReviewRoute);
@@ -228,6 +225,10 @@ app.get("/dashboard/sub-service/:id", (req, res) => {
   res.render("sub-service.hbs", { subServiceId: req.params.id });
 });
 
+
+app.get("/dashboard/customers-reviews" , (req, res)=> {
+  res.render("dashboard-review")
+})
 
 
 // List all technicians
