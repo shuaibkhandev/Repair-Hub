@@ -85,7 +85,7 @@ hbs.registerHelper('currentYear', () => {
 });
 
 // Serve uploaded files from the /uploads path
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads/", express.static("uploads"));
 
 // API routes for user authentication (signup, login, etc.)
 app.use("/api/auth", userRoutes);

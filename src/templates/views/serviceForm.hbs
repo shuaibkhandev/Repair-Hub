@@ -3,161 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" href="/css/dashboard.css" />
-     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <title>{{#if service}}Edit Service{{else}}Add Service{{/if}}</title>
 </head>
+<style>
+  #subcategory-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow the subcategories to wrap to the next line */
+  gap: 15px; /* Adds spacing between subcategories */
+}
+
+.subcategory {
+  flex: 1 1 calc(33.333% - 15px); /* Each subcategory takes 1/3 of the container width, minus the gap */
+  min-width: 280px; /* Prevents the subcategory from being too small */
+}
+
+.subcategory .input-group {
+  display: flex;
+  flex-direction: column; /* Stack the input fields vertically */
+  gap: 10px; /* Adds spacing between the input fields */
+}
+
+.subcategory input[type="text"],
+.subcategory input[type="file"] {
+  width: 100%; /* Make sure the inputs fill the width of the container */
+}
+
+</style>
 <body>
     <div class="dashboard-wrapper">
     <!-- for header part -->
-   {{>dashboardHeader}}
+    {{>dashboardHeader}}
 
-      <div class="main-container">
-     {{>dashboardSidebar}}
-      <div class="main">
+    <div class="main-container">
+        {{>dashboardSidebar}}
+        <div class="main">
 
-<div class="container-xxl py-5">
-    <div class="container py-5 px-lg-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="mb-0">{{#if service}}Edit Service{{else}}Add New Service{{/if}}</h1>
-            <a href="/dashboard/services" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Back to Services</a>
-        </div>
+        <div class="container-xxl py-5">
+            <div class="container py-5 px-lg-5">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="mb-0">{{#if service}}Edit Service{{else}}Add New Service{{/if}}</h1>
+                    <a href="/dashboard/services" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Back to Services</a>
+                </div>
 
-<form id="serviceForm" enctype="multipart/form-data">
-  <input type="hidden" id="serviceId" value="{{#if service}}{{service.slug}}{{/if}}">
+        <form id="serviceForm" enctype="multipart/form-data">
+          <input type="hidden" id="serviceId" value="{{#if service}}{{service.slug}}{{/if}}">
 
-  <div class="mb-3">
-    <label for="name" class="form-label">Service Name</label>
-    <input type="text" class="form-control" id="name" name="name" value="{{#if service}}{{service.name}}{{/if}}" required>
-  </div>
-
-  <!-- Subcategories Input Section -->
-  <div class="mb-3">
-    <label class="form-label">Subcategories</label>
-    <div id="subcategory-container">
-      {{#if service.services}}
-        {{#each service.services}}
-          <div class="mb-3 subcategory">
-            <div class="input-group mb-2">
-              <input type="text" class="form-control subcategory-name" placeholder="Subcategory Name" value="{{this.name}}" required>
-              <input type="text" class="form-control subcategory-description" placeholder="Description" value="{{this.description}}" required>
-              <input type="text" class="form-control subcategory-duration" placeholder="Duration" value="{{this.duration}}" required>
-              <input type="text" class="form-control subcategory-price" placeholder="Price" value="{{this.price}}" required>
-              <input type="file" class="form-control subcategory-image" name="subImages" required>
-              <button type="button" class="btn btn-danger remove-subcategory">Remove</button>
-            </div>
+          <div class="mb-3">
+            <label for="name" class="form-label">Service Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{#if service}}{{service.name}}{{/if}}" required>
           </div>
-        {{/each}}
-      {{/if}}
+
+          <!-- Subcategories Input Section -->
+          <div class="mb-3">
+            <label class="form-label">Subcategories</label>
+            <div id="subcategory-container">
+              {{#if service.services}}
+                {{#each service.services}}
+                  <div class="mb-3 subcategory">
+                    <div class="input-group mb-2">
+                      <input type="text" class="form-control subcategory-name" placeholder="Subcategory Name" value="{{this.name}}" required>
+                      <input type="text" class="form-control subcategory-description" placeholder="Description" value="{{this.description}}" required>
+                      <input type="text" class="form-control subcategory-duration" placeholder="Duration" value="{{this.duration}}" required>
+                      <input type="text" class="form-control subcategory-price" placeholder="Price" value="{{this.price}}" required>
+                      <input type="file" class="form-control subcategory-image" name="subImages" required>
+                      <input type="text" class="form-control subcategory-icon" placeholder="Icon (e.g., fa fa-cogs)" value="{{this.icon}}" required>
+                      <button type="button" class="btn btn-danger remove-subcategory">Remove</button>
+                    </div>
+                  </div>
+                {{/each}}
+              {{/if}}
+            </div>
+            <button type="button" class="btn btn-primary" id="add-subcategory">Add Subcategory</button>
+          </div>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required>{{#if service}}{{service.description}}{{/if}}</textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="image" class="form-label">Service Image</label>
+            <input type="file" class="form-control" id="image" name="image" required>
+          </div>
+
+          <!-- Service Icon Field -->
+          <div class="mb-3">
+            <label for="service-icon" class="form-label">Service Icon (e.g., fa fa-cogs)</label>
+            <input type="text" class="form-control" id="service-icon" name="serviceIcon" value="{{#if service}}{{service.icon}}{{/if}}" required>
+          </div>
+
+          <button type="submit" class="btn btn-success">{{#if service}}Update Service{{else}}Add Service{{/if}}</button>
+        </form>
+            </div>
+        </div>
+        </div>
+        </div>
+        </div>
     </div>
-    <button type="button" class="btn btn-primary" id="add-subcategory">Add Subcategory</button>
-  </div>
 
-  <div class="mb-3">
-    <label for="description" class="form-label">Description</label>
-    <textarea class="form-control" id="description" name="description" rows="3" required>{{#if service}}{{service.description}}{{/if}}</textarea>
-  </div>
+    <!-- JavaScript to Manage Subcategories and Form Submission -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const container = document.getElementById("subcategory-container");
+      const addBtn = document.getElementById("add-subcategory");
 
-  <div class="mb-3">
-    <label for="image" class="form-label">Service Image</label>
-    <input type="file" class="form-control" id="image" name="image" required>
-  </div>
+      addBtn.addEventListener("click", function () {
+        const div = document.createElement("div");
+        div.classList.add("mb-3", "subcategory");
 
-  <button type="submit" class="btn btn-success">{{#if service}}Update Service{{else}}Add Service{{/if}}</button>
-</form>
-    </div>
-</div>
-    </div>
-    </div>
-    </div>
+        div.innerHTML = `  
+          <div class="input-group mb-2">
+            <input type="text" class="form-control subcategory-name" placeholder="Subcategory Name" required>
+            <input type="text" class="form-control subcategory-description" placeholder="Description" required>
+            <input type="text" class="form-control subcategory-duration" placeholder="Duration" required>
+            <input type="text" class="form-control subcategory-price" placeholder="Price" required>
+            <input type="file" class="form-control subcategory-image" name="subImages" required>
+            <input type="text" class="form-control subcategory-icon" placeholder="Icon (e.g., fa fa-cogs)" required>
+            <button type="button" class="btn btn-danger remove-subcategory">Remove</button>
+          </div>
+        `;
 
-
-<!-- JavaScript to Manage Subcategories and Form Submission -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const container = document.getElementById("subcategory-container");
-  const addBtn = document.getElementById("add-subcategory");
-
-  addBtn.addEventListener("click", function () {
-    const div = document.createElement("div");
-    div.classList.add("mb-3", "subcategory");
-
-    div.innerHTML = `
-      <div class="input-group mb-2">
-        <input type="text" class="form-control subcategory-name" placeholder="Subcategory Name" required>
-        <input type="text" class="form-control subcategory-description" placeholder="Description" required>
-        <input type="text" class="form-control subcategory-duration" placeholder="Duration" required>
-        <input type="text" class="form-control subcategory-price" placeholder="Price" required>
-        <input type="file" class="form-control subcategory-image" name="subImages" required>
-        <button type="button" class="btn btn-danger remove-subcategory">Remove</button>
-      </div>
-    `;
-
-    container.appendChild(div);
-  });
-
-  container.addEventListener("click", function (e) {
-    if (e.target.classList.contains("remove-subcategory")) {
-      e.target.closest(".subcategory").remove();
-    }
-  });
-
-  document.getElementById("serviceForm").addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const formData = new FormData();
-
-    const serviceId = document.getElementById("serviceId").value;
-    const url = serviceId
-      ? `http://localhost:8000/api/services/${serviceId}`
-      : "http://localhost:8000/api/services";
-    const method = serviceId ? "PUT" : "POST";
-
-    // Append service fields
-    formData.append("name", document.getElementById("name").value);
-    formData.append("slug", document.getElementById("name").value.toLowerCase().replace(/\s+/g, "-"));
-    formData.append("description", document.getElementById("description").value);
-    formData.append("image", document.getElementById("image").files[0]);
-
-    // Sub-services data
-    const subcategoryElements = document.querySelectorAll(".subcategory");
-    const services = [];
-
-    subcategoryElements.forEach((sub, index) => {
-      const service = {
-        name: sub.querySelector(".subcategory-name").value,
-        description: sub.querySelector(".subcategory-description").value,
-        duration: sub.querySelector(".subcategory-duration").value,
-        price: sub.querySelector(".subcategory-price").value
-      };
-      services.push(service);
-
-      // Append sub-service images to FormData in order
-      formData.append("subImages", sub.querySelector(".subcategory-image").files[0]);
-    });
-
-    // Append services JSON
-    formData.append("services", JSON.stringify(services));
-
-    try {
-      const response = await fetch(url, {
-        method,
-        body: formData,
+        container.appendChild(div);
       });
 
-      const result = await response.json();
-      if (response.ok) {
-        alert(serviceId ? "Service updated successfully!" : "Service added successfully!");
-        window.location.href = "/dashboard/services";
-      } else {
-        alert(result.error || "Something went wrong!");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Server error! Please try again.");
-    }
-  });
-});
-</script>
+      container.addEventListener("click", function (e) {
+        if (e.target.classList.contains("remove-subcategory")) {
+          e.target.closest(".subcategory").remove();
+        }
+      });
+
+      document.getElementById("serviceForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData();
+
+        const serviceId = document.getElementById("serviceId").value;
+        const url = serviceId
+          ? `http://localhost:8000/api/services/${serviceId}`
+          : "http://localhost:8000/api/services";
+        const method = serviceId ? "PUT" : "POST";
+
+        // Append service fields
+        formData.append("name", document.getElementById("name").value);
+        formData.append("slug", document.getElementById("name").value.toLowerCase().replace(/\s+/g, "-"));
+        formData.append("description", document.getElementById("description").value);
+        formData.append("image", document.getElementById("image").files[0]);
+        formData.append("icon", document.getElementById("service-icon").value);  // Icon field for service
+
+        // Sub-services data
+        const subcategoryElements = document.querySelectorAll(".subcategory");
+        const services = [];
+
+        subcategoryElements.forEach((sub, index) => {
+          const service = {
+            name: sub.querySelector(".subcategory-name").value,
+            description: sub.querySelector(".subcategory-description").value,
+            duration: sub.querySelector(".subcategory-duration").value,
+            price: sub.querySelector(".subcategory-price").value,
+            icon: sub.querySelector(".subcategory-icon").value  // Icon field for subcategory
+          };
+          services.push(service);
+
+          // Append sub-service images to FormData in order
+          formData.append("subImages", sub.querySelector(".subcategory-image").files[0]);
+        });
+
+        // Append services JSON
+        formData.append("services", JSON.stringify(services));
+
+        try {
+          const response = await fetch(url, {
+            method,
+            body: formData,
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            alert(serviceId ? "Service updated successfully!" : "Service added successfully!");
+            window.location.href = "/dashboard/services";
+          } else {
+            alert(result.error || "Something went wrong!");
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Server error! Please try again.");
+        }
+      });
+    });
+    </script>
 </body>
 </html>
