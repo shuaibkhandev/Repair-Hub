@@ -67,8 +67,7 @@
                       <input type="text" class="form-control subcategory-description" placeholder="Description" value="{{this.description}}" required>
                       <input type="text" class="form-control subcategory-duration" placeholder="Duration" value="{{this.duration}}" required>
                       <input type="text" class="form-control subcategory-price" placeholder="Price" value="{{this.price}}" required>
-                      <input type="file" class="form-control subcategory-image" name="subImages" required>
-                      <input type="text" class="form-control subcategory-icon" placeholder="Icon (e.g., fa fa-cogs)" value="{{this.icon}}" required>
+                      <input type="text" class="form-control subcategory-icon" placeholder="Icon (e.g., fa fa-cogs)" value="{{this.icon}}" >
                       <button type="button" class="btn btn-danger remove-subcategory">Remove</button>
                     </div>
                   </div>
@@ -119,8 +118,7 @@
             <input type="text" class="form-control subcategory-description" placeholder="Description" required>
             <input type="text" class="form-control subcategory-duration" placeholder="Duration" required>
             <input type="text" class="form-control subcategory-price" placeholder="Price" required>
-            <input type="file" class="form-control subcategory-image" name="subImages" required>
-            <input type="text" class="form-control subcategory-icon" placeholder="Icon (e.g., fa fa-cogs)" required>
+            <input type="text" class="form-control subcategory-icon" placeholder="Icon (e.g., fa fa-cogs)" >
             <button type="button" class="btn btn-danger remove-subcategory">Remove</button>
           </div>
         `;
@@ -136,7 +134,7 @@
 
       document.getElementById("serviceForm").addEventListener("submit", async function (e) {
         e.preventDefault();
-
+console.log('s')
         const formData = new FormData();
 
         const serviceId = document.getElementById("serviceId").value;
@@ -166,8 +164,6 @@
           };
           services.push(service);
 
-          // Append sub-service images to FormData in order
-          formData.append("subImages", sub.querySelector(".subcategory-image").files[0]);
         });
 
         // Append services JSON
