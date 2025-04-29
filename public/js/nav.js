@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         listItem.classList.add("list-group-item");
 
         const link = document.createElement("a");
+        link.style.display = 'block';
         link.href = `/services/${slug}`; // Updated service URL pattern
         link.textContent = name;
 
