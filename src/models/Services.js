@@ -6,6 +6,7 @@ const subServiceSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   duration: { type: String, required: true },
   image: { type: String},
+ icon: { type: String, default: 'fa fa-cogs' },
 });
 
 const serviceSchema = new mongoose.Schema({
@@ -13,6 +14,7 @@ const serviceSchema = new mongoose.Schema({
   slug: { type: String, required: true, unique: true },
   description: { type: String, required: true },
   image: { type: String, required: true },
+  icon: { type: String, default: 'fa fa-cogs' },
   services: [subServiceSchema] // Nested sub-services
 }, { timestamps: true });
 

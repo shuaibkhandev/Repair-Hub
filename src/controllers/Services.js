@@ -29,11 +29,11 @@ exports.getServiceBySlug = async (req, res) => {
 // Create a New Service
 exports.createService = async (req, res) => {
   try {
-    const { name, slug, description, services } = req.body;
+    const { name, slug, description, icon , services } = req.body;
 
     // Main service image path from multer
     const serviceImage = req.files["image"]?.[0]?.path;
-
+    const serviceIcon = icon || 'fa fa-cogs';
     // Parse sub-services array from string (if coming from a form or frontend)
     let parsedServices = [];
     if (services) {
@@ -50,6 +50,7 @@ exports.createService = async (req, res) => {
       slug,
       description,
       image: serviceImage,
+      icon: serviceIcon,
       services: parsedServices
     });
 
@@ -88,10 +89,10 @@ exports.getSubServiceDetails = async (req, res) => {
 exports.updateService = async (req, res) => {
   try {
     const { slug } = req.params;
-    const { name, description,  services } = req.body;
+    const { name, description,  icon, services } = req.body;
 
     const serviceImage = req.files["image"]?.[0]?.path;
-
+    const serviceIcon = icon || 'fa fa-cogs';
       // Parse sub-services array from string (if coming from a form or frontend)
       let parsedServices = [];
       if (services) {
@@ -113,6 +114,7 @@ exports.updateService = async (req, res) => {
         slug: name.toLowerCase().replace(/\s+/g, "-"), // Update slug dynamically
       description,
       image: serviceImage,
+      icon: serviceIcon,
       services: parsedServices
       },
       { new: true } // Return the updated document

@@ -8,9 +8,12 @@ const storage = multer.diskStorage({
     cb(null, "uploads/"); // Make sure this folder exists
   },
   filename: function (req, file, cb) {
+    const name = path.parse(file.originalname).name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-_]/g, '').toLowerCase();
+    const ext = path.extname(file.originalname).toLowerCase();
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
+    cb(null, `${name}-${uniqueSuffix}${ext}`);
   }
+  
 });
 
 // File filter to allow only images
