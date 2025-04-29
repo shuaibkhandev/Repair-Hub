@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/repair_hub");
+    await mongoose.connect("mongodb+srv://welivesoft:nbJYMuuoiubXWYXk@repair-hub-cluster.d8okrmx.mongodb.net/repair-hub?retryWrites=true&w=majority&appName=Repair-Hub-cluster");
     console.log("DB Connected Successfully! 😍");
   } catch (err) {
     console.error("DB Connection Failed! 😑", err);
@@ -11,3 +11,5 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
+// nbJYMuuoiubXWYXk
+// welivesoft
