@@ -43,7 +43,7 @@
   <input type="password" name="password" id="password" class="form-control form-control-lg"
     placeholder="Enter password" required />
   <label class="form-label" for="password">Password</label>
-  <i class="fa fa-eye toggle-password" toggle="#password" style="position:absolute; right:15px; top:30%; transform:translateY(-50%); cursor:pointer;"></i>
+  <i class="fa fa-eye-slash toggle-password" toggle="#password" style="position:absolute; right:15px; top:30%; transform:translateY(-50%); cursor:pointer;"></i>
 </div>
 
 
@@ -113,8 +113,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const input = document.querySelector(this.getAttribute("toggle"));
         const type = input.getAttribute("type") === "password" ? "text" : "password";
         input.setAttribute("type", type);
-        this.classList.toggle("fa-eye");
         this.classList.toggle("fa-eye-slash");
+        this.classList.toggle("fa-eye");
       });
     });
     });

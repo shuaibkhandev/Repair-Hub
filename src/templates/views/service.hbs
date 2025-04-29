@@ -178,7 +178,7 @@
       return;
     }
 
-    
+
        data.forEach((tech, index) => {
         const delay = 0.1 + (index * 0.2); // optional delay if you want wow animation
 
@@ -186,8 +186,8 @@
         card.className = 'col-lg-3 col-md-6';
         card.innerHTML = `
           <div class="team-item">
-            <div class="position-relative overflow-hidden">
-              <img class="img-fluid" src="${tech.photoUrl.replace('\\', '/')}" alt="${tech.name}">
+           <div class="position-relative overflow-hidden" style='height:200px'>
+              <img class="img-fluid" style='height:100%' src="${tech.photoUrl.replace('\\', '/')}" alt="${tech.name}">
             </div>
             <div class="team-text">
               <div class="bg-light">

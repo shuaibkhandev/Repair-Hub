@@ -234,19 +234,25 @@ function showToast(message, type = "success") {
       text: message,
       duration: 5000,
       gravity: "top",
-      position: "right", 
+      position: "right",
       backgroundColor: type === "success" ? "green" : "red",
     }).showToast();
   }
-
+  
   if (localStorage.getItem("loginToast") === "loginSuccess") {
-    showToast("Logined Successfully", "success");
+    showToast("Logged in Successfully", "success");
     localStorage.removeItem("loginToast");
-  }else if(localStorage.getItem("signupToast") === "signupSuccess"){
-    showToast("Registerd Successfully", "success");
+  } else if (localStorage.getItem("signupToast") === "signupSuccess") {
+    showToast("Registered Successfully", "success");
     localStorage.removeItem("signupToast");
+  } else if (localStorage.getItem("signupToast") === "signupFailed") {
+    showToast("Registration Failed. Please try again.", "error");
+    localStorage.removeItem("signupToast");
+  } else if (localStorage.getItem("loginToast") === "loginFailed") {
+    showToast("Login Failed. Invalid credentials.", "error");
+    localStorage.removeItem("loginToast");
   }
-
+  
 
 
 
