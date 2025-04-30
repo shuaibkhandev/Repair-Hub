@@ -62,7 +62,6 @@ async function addService() {
 
 async function updateService(id) {
   const newName = document.getElementById(`service-${id}`).value;
-  console.log(newName)
 
   try {
     const res = await fetch(`${apiUrl}/${id}`, {

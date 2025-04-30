@@ -19,7 +19,6 @@ router.post('/', express.raw({ type: 'application/json' }), async (req, res) => 
   // Handle the event
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
-console.log(session);
     try {
       const customerData = {
         name: session.customer_details.name,
@@ -34,7 +33,6 @@ console.log(session);
       };
 
       await Customer.create(customerData);
-      console.log('Customer saved:', customerData);
     } catch (err) {
       console.error('Error saving customer:', err.message);
     }

@@ -87,7 +87,6 @@ async function fetchUsers() {
 
 select.addEventListener("change", async (e) => {
   const userId = select.getAttribute("role-id");
-  console.log(userId)
   const newRole = e.target.value === "true"; 
 
    const confirmed = window.confirm("Are you sure you want to update the user role?");

@@ -4,7 +4,6 @@ const Technician = require('../models/Technician');
 exports.createTechnician = async (req, res) => {
   try {
     const { name, expertise, experience } = req.body;
-    console.log(name);
     
     const photo = req.files?.photo?.[0]?.path;
 

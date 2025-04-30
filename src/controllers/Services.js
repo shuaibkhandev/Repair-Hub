@@ -55,7 +55,7 @@ exports.createService = async (req, res) => {
     });
 
     const data = await newService.save();
-    console.log(data);
+
 
     res.status(201).json({ message: "Service created successfully", service: newService });
   } catch (error) {
